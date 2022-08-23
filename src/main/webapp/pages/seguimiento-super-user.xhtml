@@ -1,0 +1,1486 @@
+<ui:composition xmlns	=	"http://www.w3.org/1999/xhtml"
+		xmlns:ui=	"http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h	=	"http://xmlns.jcp.org/jsf/html"
+		xmlns:f	=	"http://xmlns.jcp.org/jsf/core"
+    	xmlns:p	=	"http://primefaces.org/ui"
+		template = "../template/template.xhtml">
+	<ui:define name = "contenido">	
+		
+		<h:panelGroup id="pnlSuperFollow">
+		
+			<h:panelGroup id="pnlMsgSucc" rendered="#{superUsrFollowMB.msgSuccess != ''}">
+				<div class="container pad-top-1">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="alert alert-success alert-dismissible">
+						    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+						    	<strong style="font-size: 15px;"> &#10003; </strong> - <h:outputLabel id="lbSatisfacorio" value="#{superUsrFollowMB.msgSuccess}"/>
+						  	</div>
+						</div>								
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<h:panelGroup id="pnlMsgErr" rendered="#{superUsrFollowMB.msgError != ''}">
+		   		<div class="container pad-top-1" >
+					<div class="row">
+						<div class="col-12">
+						  	<div class="alert alert-danger alert-dismissible">
+						    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+							    <strong>Atención</strong> - <p:outputLabel value = "#{superUsrFollowMB.msgError}"/>
+							</div>
+						</div>								
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<div class="container">
+				<H3>Seguimiento del proyecto <h:outputLabel value="''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}''"/></H3>
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-7">
+						<p:outputLabel value="Información del proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}''"/>
+					</div>
+					<div class="col-sm-5">
+						<p:accordionPanel activeIndex="">
+				            <p:tab title="Acciones sobre el proyecto" >
+				            	
+								<h:panelGroup id="pnlDataProyect">
+									<div class="container">
+						            	<div class="row">
+											<div class="col-sm-6">
+												<p:commandButton value="Cancelar Proyecto"  styleClass="ui-button-raised ui-button-danger" 
+													rendered="#{superUsrFollowMB.proyectoSeguimiento.estatus != 'CANCELADO'}"
+													oncomplete="PF('verCancelarProyecto').show()"/>
+													
+												<p:commandButton value="Activar Proyecto"  styleClass="ui-button-raised" 
+													rendered="#{superUsrFollowMB.proyectoSeguimiento.estatus == 'CANCELADO'}"
+													oncomplete="PF('verActivarProyecto').show()"/>
+											</div>
+											<div class="col-sm-6">
+												<p:commandButton value="Eliminar Proyecto"  styleClass="ui-button-raised ui-button-danger"
+												oncomplete="PF('verEliminarProyecto').show()"/>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+										
+				            </p:tab>
+				        </p:accordionPanel>
+					</div>
+				</div>				
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<hr/>
+					</div>
+				</div>
+			</div>
+			<div class="container padding-1">
+				<div class="row">
+					<div class="col-12">
+						
+						<p:accordionPanel multiple="true" widgetVar="multiple" activeIndex="">
+				            <p:tab title="Datos del proyecto" >
+				            
+								<h:panelGroup id="pnlDataProyect">
+									<div class="container padding-12-px">
+						               <div class="row">
+											<div class="col-sm-4">
+												<p:outputLabel value="Integrador"/>
+												<p:inputText value="#{superUsrFollowMB.proyectoSeguimiento.integrador}" styleClass="input-form" />
+											</div>
+											<div class="col-sm-4">
+												<p:outputLabel value="Nombre del proyecto"/>
+												<p:inputText value="#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}" styleClass="input-form" />
+											</div>
+											<div class="col-sm-4">
+												<p:outputLabel value="Solicitante"/>
+												<p:inputText value="#{superUsrFollowMB.proyectoSeguimiento.solicitante}" styleClass="input-form" />
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<p:outputLabel id="lbDireccion" value="Dirección:" styleClass="width-complete" rendered="#{superUsrFollowMB.idGerencia == 0}"/>
+												<p:inputText id="inDireccion" placeholder="Dirección" styleClass="width-complete" autocomplete="off" rendered="#{superUsrFollowMB.idGerencia == 0}"
+												value="#{superUsrFollowMB.proyectoSeguimiento.direccion}"/>
+											</div>
+											<div class="col-sm-4">
+												<p:outputLabel id="lbGerencia" value="Gerencia:" styleClass="width-complete" rendered="#{superUsrFollowMB.idGerencia == 0}"/>
+												<p:inputText id="inGerencia" placeholder="Gerencia" styleClass="width-complete" autocomplete="off" rendered="#{superUsrFollowMB.idGerencia == 0}"
+												value="#{superUsrFollowMB.proyectoSeguimiento.gerencia}"/>
+											</div>
+											<div class="col-sm-4"></div>
+										</div>
+										<div class="row">
+											<div class="col-sm-4">
+												<p:outputLabel id="lbDireccionCat" value="Dirección:" styleClass="width-complete"/>
+												<p:selectOneMenu id="inSlcDireccion" value="#{superUsrFollowMB.idDireccion}" styleClass="width-complete" >
+													<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+													<f:selectItems value="#{superUsrFollowMB.listDireccion}" var="direccion" itemLabel="#{direccion.direccion}" itemValue="#{direccion.idDireccion}" />
+													<p:ajax listener="#{superUsrFollowMB.cargaGerencias}" update="inSlcGerencia"/>
+												</p:selectOneMenu>
+											</div>
+											<div class="col-sm-4">
+												<p:outputLabel id="lbGerenciaCat" value="Gerencia:" styleClass="width-complete"/>
+												<p:selectOneMenu id="inSlcGerencia" value="#{superUsrFollowMB.idGerencia}" styleClass="width-complete"
+													disabled="#{superUsrFollowMB.idDireccion == 0}"  style="min-width: 300px !important; max-width: 350px !important;">
+													<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+													<f:selectItems value="#{superUsrFollowMB.listGerencia}" var="ger" itemLabel="#{ger.gerencia}" itemValue="#{ger.idGerencia}" />
+												</p:selectOneMenu>
+												
+											</div>
+											<div class="col-sm-4">
+												
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm">
+												<p:outputLabel id="lbDescripcion" value="Descripción:" styleClass="width-complete"/>
+												<p:inputTextarea id="inDescripcion" placeholder="Descripción" styleClass="width-complete" autocomplete="off"
+												value="#{superUsrFollowMB.proyectoSeguimiento.descripcion}"/>
+											</div>
+											<div class="col-sm">
+												<p:outputLabel id="lbComentariosGrls" value="Comentarios Generales:" styleClass="width-complete"/>
+												<p:inputTextarea id="inComentariosGrls" placeholder="Comentarios Generales" styleClass="width-complete" autocomplete="off"
+												value="#{superUsrFollowMB.proyectoSeguimiento.comentariosGrls}"/>
+											</div>
+										</div>
+										<div class="row pad-top-1">
+											<div class="col-sm-4">
+											</div>
+											<div class="col-sm-4 text-center">
+												<p:commandButton value="Guardar Proyecto" styleClass="ui-button-raised " style="width:200px"
+												actionListener="#{superUsrFollowMB.GuardaDatosProyecto}" 
+												ajax="false"
+												update="pnlDataProyect pnlMsgSucc pnlMsgErr"
+												process="@this"/>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+								
+								<br/>
+								<h:panelGroup id="pnlPortafolioEmp" rendered="#{superUsrFollowMB.proyectoSeguimiento.portafolioEmp.idSeguimiento != ''}">
+									<div class="col-sm-12 padding-1">
+										<div class="encabezado-div shadow-sapi-top #{(superUsrFollowMB.proyectoSeguimiento.faseSiguiente == 'Portafolio Empresarial') ? 'bck-green' : 'bck-blue' } ">
+											<div class="text-center" style="padding: 0.5rem;">
+												<p:outputLabel value="Portafolio Empresarial"/>
+											</div>
+										</div>
+										<div class="cuerpo-div shadow-sapi height-82">
+											<h:panelGroup id="pnlMsgWarn" rendered="#{superUsrFollowMB.msgWarnning != ''}">
+										   		<div class="container pad-top-1" >
+													<div class="row">
+														<div class="col-12">
+														  	<div class="alert alert-warning alert-dismissible">
+														    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+															    <strong>Precaución</strong> - <p:outputLabel value = "#{superUsrFollowMB.msgWarnning}"/>
+															    <h:dataTable value="#{superUsrFollowMB.listFoliosRegistrados}" var="listar">
+												    		 		<h:column>
+																    	<strong>&#8226;</strong> Folio: #{listar.folio} , Proyecto: #{listar.nombreProyecto} , Estatus: #{listar.estatusProyecto} 
+																    </h:column>
+														    	</h:dataTable>
+															</div>
+														</div>								
+													</div>
+												</div>
+											</h:panelGroup>
+										
+											<div class="container padding-12-px">						
+												<div class="row">
+													<div class="col-sm-6">
+														<p:outputLabel styleClass="font-weight-500 input-form" value="Aplica"/>
+														<p:selectOneMenu id="slcResponsable" value="#{superUsrFollowMB.proyectoSeguimiento.portafolioEmp.aplica}" 
+															styleClass="width-complete " style="min-width: 100% !important">
+															<f:selectItem itemLabel="Si" itemValue="Si"/>
+															<f:selectItem itemLabel="No" itemValue="No"/>
+														</p:selectOneMenu>
+													</div>
+													<div class="col-sm-6">
+														<p:outputLabel styleClass="font-weight-500 input-form" value="Folio"/>
+														<p:inputText styleClass="input-form" value="#{superUsrFollowMB.proyectoSeguimiento.portafolioEmp.folio}">
+															<p:ajax event="change" listener="#{superUsrFollowMB.verificaFolioExistente}" 
+																update="pnlPortafolioEmp" process="@all" />
+														</p:inputText>
+													</div>
+												</div>		
+												<div class="row">
+													<div class="col-sm-6">
+														<p:outputLabel styleClass="font-weight-500 input-form" value="Entrada"/>
+														<p:calendar id="inFecEntrada" navigator="true" placeholder="Entrada" required="false" autocomplete="off"
+															pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.datePEEntrada}"/>
+													</div>
+													<div class="col-sm-6">
+														<p:outputLabel styleClass="font-weight-500 input-form" value="Salida"/>
+														<p:calendar id="inFecSalida" navigator="true" placeholder="Salida" required="false" autocomplete="off"
+															pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.datePESalida}"/>
+													</div>
+												</div>
+											</div>
+																	
+											<div class="row">
+												<div class="col-sm-4">
+												</div>
+												<div class="col-sm-4 text-center">
+													<p:commandButton 
+														value="Guardar PE" 
+														styleClass="ui-button-raised " 
+														style="width:200px"
+														actionListener="#{superUsrFollowMB.GuardaDatosPortafolioEmp}" 
+														ajax="false"
+														update="pnlPortafolioEmp pnlMsgSucc pnlMsgErr"
+														process="@this"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+								
+				                
+				            </p:tab>
+				            <p:tab title="Información del Seguimiento" rendered="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.idProyectoF60 != 0}">
+				            
+					            <div class="container padding-12-px">
+									<div class="row">				            
+										<h:panelGroup id="pnlF60" styleClass="col-sm-6 padding-1" rendered="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.idProyectoF60 != 0}">			                
+						                	<div class="encabezado-div shadow-sapi-top #{(superUsrFollowMB.proyectoSeguimiento.faseSiguiente == 'F60') ? 'bck-green' : 'bck-blue' } ">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="F60"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-90">
+												<div class="container ">
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Tipo F60"/>	
+															<p:selectOneMenu id="TipoF60" value="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.tipoF60.idTipoF60}" styleClass="width-complete" style="min-width: 100% !important">
+																<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+																<f:selectItems value="#{superUsrFollowMB.listTiposF60}" var="tipoF60" 
+																	itemLabel="#{tipoF60.tipoF60}" itemValue="#{tipoF60.idTipoF60}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Jefes"/>	
+															<p:selectOneMenu id="Jefes" value="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.jefeF60.idJefeF60}" styleClass="width-complete" style="min-width: 100% !important">
+																<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+																<f:selectItems value="#{superUsrFollowMB.listJefesF60}" var="jefesF60" 
+																	itemLabel="#{jefesF60.nombre}" itemValue="#{jefesF60.idJefeF60}" />
+															</p:selectOneMenu>
+														</div>
+														<div class="col-12">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Responsable"/>	
+															<p:inputText styleClass="width-complete" value="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.responsable}"/>
+														</div>
+													</div>
+													<h:panelGroup id="pnlFechasF60" class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:calendar id="inFecInicioF60" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.fechaInicioF60}"  autocomplete="off"
+																disabledWeekends="true">
+																<p:ajax event="dateSelect" listener="#{superUsrFollowMB.calculaFechaCompromisoF60}" 
+																	update="pnlFechasF60"/>
+																<p:ajax event="keyup" listener="#{superUsrFollowMB.calculaFechaCompromisoF60}" 
+																	update="pnlFechasF60"/>
+															</p:calendar>
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" autocomplete="off"
+																value="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.fechaCompromiso}"/>
+														</div>
+													</h:panelGroup>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:calendar id="inFecFinF60" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.fechaFinF60}"  autocomplete="off"
+																disabledWeekends="true"/>
+														</div>
+														<div class="col-6">
+															<br/>
+															<p:selectBooleanCheckbox styleClass=" " itemLabel="Cuenta con infraestructura" 
+																value="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.cuentaConInfraestructura}">
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.sinFechas}">								
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+													<div class="row pad-top-4">
+														<h:panelGroup class="col-sm-3" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual != 'F60'}">
+														</h:panelGroup>
+														<div class="col-sm-6 text-center">
+															<p:commandButton 
+																value="Guardar F60" 
+																styleClass="ui-button-raised " 
+																style="width:200px"
+																ajax="false"
+																actionListener="#{superUsrFollowMB.GuardaF60}"
+																update="pnlF60 pnlMsgSucc pnlMsgErr"
+																process="@this"/>
+														</div>
+														<h:panelGroup class="col-sm-6" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual == 'F60'}">
+															<p:commandButton 
+																value="Eliminar F60" 
+																oncomplete="PF('verConfirmacionEliminarF60').show()"
+																styleClass="ui-button-raised ui-button-danger" 
+																style="width:200px"/>
+														</h:panelGroup>
+													</div>
+												</div>
+											</div>			                
+						                </h:panelGroup>
+						                
+						                <h:panelGroup id="pnlInfraestructura" styleClass="col-sm-6 padding-1" 
+						                	rendered="#{superUsrFollowMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO' and superUsrFollowMB.proyectoSeguimiento.proyectoF60.cuentaConInfraestructura != true }">
+						                	<div class="encabezado-div shadow-sapi-top #{(superUsrFollowMB.proyectoSeguimiento.faseSiguiente == 'INFRAESTRUCTURA') ? 'bck-green' : 'bck-blue' } ">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="Infraestructura"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82" style="padding-bottom: 30px;">											
+												<div class="container ">
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="KickOff"/>										
+															<p:calendar id="inKickOffInfra" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.fechaKickOffInfra}" autocomplete="off"
+																disabledWeekends="true">
+																<p:ajax event="dateSelect" update="pnlInfraestructura"/>
+															</p:calendar>
+														</div>
+														<div class="col-6 text-center">
+															<br/>
+															
+														</div>
+													</div>
+													<h:panelGroup id="pnlFechasInfra" class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:calendar id="inFecInicioInfra" navigator="true" required="false" styleClass="input-form"
+																	pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.fechaInicioInfra}" autocomplete="off"
+																	disabledWeekends="true">
+																 <p:ajax event="dateSelect" listener="#{superUsrFollowMB.calculaFechaCompromisoInfra}" 
+																	update="pnlFechasInfra"/>
+																<p:ajax event="keyup" listener="#{superUsrFollowMB.calculaFechaCompromisoInfra}" 
+																	update="pnlFechasInfra"/>
+															</p:calendar>
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" autocomplete="off" 
+															value="#{superUsrFollowMB.proyectoSeguimiento.seguimientoInfra.fechaCompromiso}"/>
+														</div>
+													</h:panelGroup>
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:calendar id="inFecFinInfra" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.fechaFinInfra}" autocomplete="off"
+																disabledWeekends="true"/>
+														</div>
+														<div class="col-6">
+															<br/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{superUsrFollowMB.proyectoSeguimiento.seguimientoInfra.sinFechas}">								
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+													<div class="row pad-top-2">
+														<h:panelGroup class="col-sm-3" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual != 'INFRAESTRUCTURA'}"></h:panelGroup>
+														<div class="col-sm-6 text-center">
+															<p:commandButton 
+																styleClass="ui-button-raised width-200" 
+																value="Guardar Infraestructura" 
+																ajax="false" 
+																process="@all" 
+																update="pnlMsgSucc pnlMsgErr pnlInfraestructura"
+															 	actionListener="#{superUsrFollowMB.GuardaInfraestructura}"/>			                
+														</div>
+														<h:panelGroup class="col-sm-6" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual == 'INFRAESTRUCTURA'}">
+															<p:commandButton 
+																value="Eliminar Infraestructura" 
+																oncomplete="PF('verEliminaSeguimientoInfra').show()"
+																styleClass="ui-button-raised ui-button-danger" 
+																style="width:200px"/>
+														</h:panelGroup>
+													</div>
+												</div>											
+											</div>
+						                </h:panelGroup>
+						                
+						                <h:panelGroup id="pnlAplicativo"  styleClass="col-sm-6 padding-1" rendered="#{superUsrFollowMB.proyectoSeguimiento.seguimientoInfra.estatus == 'TERMINADO' or (superUsrFollowMB.proyectoSeguimiento.proyectoF60.cuentaConInfraestructura == true and superUsrFollowMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO' ) }">
+											<div class="encabezado-div shadow-sapi-top #{(superUsrFollowMB.proyectoSeguimiento.faseSiguiente == 'APLICATIVO') ? 'bck-green' : 'bck-blue' } ">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="Aplicativo"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82">
+												<div class="container ">						
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Despliegue"/>										
+															<p:calendar id="inFecInicioAplicativo" navigator="true" required="false" styleClass="input-form" 
+																value="#{superUsrFollowMB.fechaDespliegue}"
+																pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+																disabledWeekends="true">																
+															</p:calendar>
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin Pruebas"/>
+															<p:calendar id="inFecFinPruebas" navigator="true" required="false" styleClass="input-form" 
+																value="#{superUsrFollowMB.fechaFinPruebas}"
+																pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+																disabledWeekends="true">
+															</p:calendar>
+														</div>
+													</div>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Notificación"/>
+															<p:calendar id="inFecFinAplicativo" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.fechaNotificacion}" autocomplete="off"
+																disabledWeekends="true"/>
+														</div>
+														<div class="col-6">
+															<br/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{superUsrFollowMB.proyectoSeguimiento.aplicativo.sinFechas}">								
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>											
+													<div class="row pad-top-2">
+														<h:panelGroup class="col-sm-3" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual != 'APLICATIVO'}"></h:panelGroup>
+														<div class="col-sm-6 text-center">
+															<p:commandButton 
+																styleClass="ui-button-raised width-200" 
+																value="Guardar Aplicativo" 
+																ajax="false" 
+																process="@all" 
+																update="pnlMsgSucc pnlMsgErr pnlAplicativo"
+															 	actionListener="#{superUsrFollowMB.GuardaAplicativo}"/>			                
+														</div>
+														<h:panelGroup class="col-sm-6" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual == 'APLICATIVO'}">
+															<p:commandButton 
+																value="Eliminar Aplicativo" 
+																oncomplete="PF('verEliminaSeguimientoAplicativo').show()"
+																styleClass="ui-button-raised ui-button-danger" 
+																style="width:200px"/>
+														</h:panelGroup>
+													</div>
+													
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup id="pnlPreATP" class="col-sm-6 padding-1" rendered="#{superUsrFollowMB.proyectoSeguimiento.aplicativo.estatus == 'TERMINADO'}">
+											<div class="encabezado-div shadow-sapi-top #{(superUsrFollowMB.proyectoSeguimiento.faseSiguiente == 'PREATP') ? 'bck-green' : 'bck-blue' } ">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="Pre ATP´s"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82">
+												<div class="container ">						
+													<h:panelGroup id="pnlFechasPreATP" class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:calendar id="inFecInicioPreAtp" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+																value="#{superUsrFollowMB.fechaInicioPreAtp}"
+																disabledWeekends="true">
+																<p:ajax event="dateSelect" listener="#{superUsrFollowMB.calculaFechaCompromisoPreAtp}"
+																	update="pnlFechasPreATP"/>
+																<p:ajax event="keyup" listener="#{superUsrFollowMB.calculaFechaCompromisoPreAtp}" 
+																	update="pnlFechasPreATP"/>
+															</p:calendar>
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" autocomplete="off"
+															value="#{superUsrFollowMB.proyectoSeguimiento.preAtp.fechaCompromiso}"/>
+														</div>
+													</h:panelGroup>
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:calendar id="inFecFinPreAtp" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.fechaFinPreAtp}" autocomplete="off"
+																disabledWeekends="true"/>
+														</div>
+														<div class="col-6">
+															<br/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{superUsrFollowMB.proyectoSeguimiento.preAtp.sinFechas}">								
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+													<div class="row pad-top-2">
+														<h:panelGroup class="col-sm-3" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual != 'PREATP'}"></h:panelGroup>
+														<div class="col-sm-6 text-center">
+															<p:commandButton 
+																styleClass="ui-button-raised width-200" 
+																value="Guardar Pre ATP´s" 
+																ajax="false" 
+																process="@all" 
+																update="pnlMsgSucc pnlMsgErr pnlPreATP"
+															 	actionListener="#{superUsrFollowMB.GuardaPreAtp}"/>			                
+														</div>
+														<h:panelGroup class="col-sm-6" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual == 'PREATP'}">
+															<p:commandButton 
+																value="Eliminar Pre ATP´s" 
+																oncomplete="PF('verEliminaSeguimientoPreATP').show()"
+																styleClass="ui-button-raised ui-button-danger" 
+																style="width:200px"/>
+														</h:panelGroup>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup id="pnlATPs" class="col-sm-6 padding-1" rendered="#{superUsrFollowMB.proyectoSeguimiento.preAtp.estatus == 'TERMINADO'}">
+											<div class="encabezado-div shadow-sapi-top #{(superUsrFollowMB.proyectoSeguimiento.faseSiguiente == 'ATP') ? 'bck-green' : 'bck-blue' } ">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="ATP´s"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82">
+												<div class="container ">						
+													<h:panelGroup id="pnlFechasATP"  class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:calendar id="inFecInicioAtp" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+																value="#{superUsrFollowMB.fechaInicioAtp}"
+																disabledWeekends="true">
+																<p:ajax event="dateSelect" listener="#{superUsrFollowMB.calculaFechaCompromisoAtp}"
+																	update="pnlFechasATP"/>
+																<p:ajax event="keyup" listener="#{superUsrFollowMB.calculaFechaCompromisoAtp}"
+																	update="pnlFechasATP"/>
+															</p:calendar>
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" autocomplete="off"
+																 value="#{superUsrFollowMB.proyectoSeguimiento.segATP.fechaCompromiso}"/>
+														</div>
+													</h:panelGroup>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:calendar id="inFecFinAtp" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+																value="#{superUsrFollowMB.fechaFinAtp}"
+																disabledWeekends="true"/>
+														</div>
+														<div class="col-6">
+															<br/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{superUsrFollowMB.proyectoSeguimiento.segATP.sinFechas}">								
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+													<div class="row pad-top-2">
+														<h:panelGroup class="col-sm-3" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual != 'ATP'}"></h:panelGroup>
+														<div class="col-sm-6 text-center">
+															<p:commandButton 
+																styleClass="ui-button-raised width-200" 
+																value="Guardar ATP´s" 
+																ajax="false" 
+																process="@all" 
+																update="pnlMsgSucc pnlMsgErr pnlATPs"
+															 	actionListener="#{superUsrFollowMB.GuardarAtp}"/>			                
+														</div>
+														<h:panelGroup class="col-sm-6" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual == 'ATP'}">																
+															<p:commandButton 
+																value="Eliminar ATP´s" 
+																oncomplete="PF('verEliminaSeguimientoATP').show()"
+																styleClass="ui-button-raised ui-button-danger" 
+																style="width:200px"/>
+														</h:panelGroup>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup id="pnlRTO" class="col-sm-6 padding-1" rendered="#{superUsrFollowMB.proyectoSeguimiento.segATP.estatus == 'TERMINADO'}">
+											<div class="encabezado-div shadow-sapi-top #{(superUsrFollowMB.proyectoSeguimiento.faseSiguiente == 'RTO') ? 'bck-green' : 'bck-blue' } ">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="RTO"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82">
+												<div class="container ">						
+													<h:panelGroup id="pnlFechasRTO" class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:calendar id="inFecInicioRto" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+																value="#{superUsrFollowMB.fechaInicioRto}" 
+																disabledWeekends="true">
+																<p:ajax event="dateSelect" listener="#{superUsrFollowMB.calculaFechaCompromisoRTO}"
+																	update="pnlFechasRTO"/>
+																<p:ajax event="keyup" listener="#{superUsrFollowMB.calculaFechaCompromisoRTO}" 
+																	update="pnlFechasRTO"/>
+															</p:calendar>
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" autocomplete="off" 
+																value="#{superUsrFollowMB.proyectoSeguimiento.segRTO.fechaCompromiso}"/>
+														</div>
+													</h:panelGroup>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:calendar id="inFecFinRto" navigator="true" required="false" styleClass="input-form"
+																pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+																value="#{superUsrFollowMB.fechaFinRto}"
+																disabledWeekends="true"/>
+														</div>
+														<div class="col-6">
+															<br/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{superUsrFollowMB.proyectoSeguimiento.segRTO.sinFechas}">								
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>												
+													<div class="row pad-top-2">
+														<h:panelGroup class="col-sm-3" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual != 'RTO'}"
+														></h:panelGroup>
+														<div class="col-sm-6 text-center">
+															<p:commandButton 
+																styleClass="ui-button-raised width-200" 
+																value="Guardar RTO" 
+																ajax="false" 
+																process="@all" 
+																update="pnlMsgSucc pnlMsgErr pnlRTO"
+															 	actionListener="#{superUsrFollowMB.GuardarRTO}"/>			                
+														</div>
+														<h:panelGroup class="col-sm-6" rendered="#{superUsrFollowMB.proyectoSeguimiento.faseActual == 'RTO'}">
+															<p:commandButton 
+																value="Eliminar RTO" 
+																oncomplete="PF('verEliminaSeguimientoRTO').show()"
+																styleClass="ui-button-raised ui-button-danger" 
+																style="width:200px"/>
+														</h:panelGroup>
+													</div>
+													
+												</div>
+											</div>
+										</h:panelGroup>
+						                
+									</div>
+								</div>
+				                
+				            </p:tab>				            
+				            <p:tab title="Ambientes (#{superUsrFollowMB.numeroAmbientes})">
+				            
+								<p:dataTable id="tblInfraestructura" value="#{superUsrFollowMB.listAmbiente}" 
+									var="rsAmbiente" reflow="true" style="font-size: 13px;">
+									
+									<p:column headerText="Opc." styleClass="width-30" >
+										<div class="container">
+											<div class="row">
+												<div class="col-sm padding-1 text-center">
+													<p:commandButton 
+														id="updateAmbienteTable"
+														oncomplete="PF('verAmbiente').show()"
+														styleClass="ui-button-raised"
+														title="Actualizar"
+														icon="pi pi-sync"
+														action="#{superUsrFollowMB.iniciaMensajeHostIP}"
+														update="templateForm:updateAmbiente"
+														process="@all">
+														<f:setPropertyActionListener value="#{rsAmbiente}"  target="#{superUsrFollowMB.ambienteUpdate}" for="updateAmbienteTable" />
+													</p:commandButton>
+												</div>
+												
+												<div class="col-sm padding-1 text-center">
+													<p:commandButton 
+														id="eliminarAmbienteTable"
+														oncomplete="PF('verBorrarAmbiente').show()"
+														styleClass="ui-button-raised ui-button-danger"
+														title="Eliminar"
+														icon="pi pi-trash"
+														update="templateForm:borrarAmbiente"
+														process="@all">
+														<f:setPropertyActionListener value="#{rsAmbiente}" 
+															target="#{superUsrFollowMB.ambienteDelete}"/>
+													</p:commandButton>
+												</div>
+											</div>
+										</div>										
+									</p:column>
+									<p:column headerText="Ambiente" sortBy="#{rsAmbiente.tipoAmbiente.tipoAmbiente}" styleClass="width-50" style="text-align: center;">
+										<h:outputText id="rsLbAmbiente" value="#{rsAmbiente.tipoAmbiente.tipoAmbiente}" title="#{rsAmbiente.comentario}"/>
+									</p:column>
+									<p:column headerText="CPU" sortBy="#{rsAmbiente.cpu}" style="text-align: center;" styleClass="width-40">
+										<h:outputText id="rsLbCPU" value="#{rsAmbiente.cpu}"/>
+									</p:column>
+									<p:column headerText="Memoria" sortBy="#{rsAmbiente.memoria}" style="text-align: center;" styleClass="width-40">
+										<h:outputText id="rsLbMemoria" value="#{rsAmbiente.memoria}"/>
+									</p:column>
+									<p:column headerText="Disco Duro" sortBy="#{rsAmbiente.discoDuro}" style="text-align: center;" styleClass="width-40">
+										<h:outputText id="rsLbDiscoDuro" value="#{rsAmbiente.discoDuro}"/>
+									</p:column>
+									<p:column headerText="Unidad Medida HDD" sortBy="#{rsAmbiente.unidadMedidaDD}" style="text-align: center;">
+										<h:outputText id="rsLbUDM" value="#{rsAmbiente.unidadMedidaDD}"/>
+									</p:column>
+									<p:column headerText="Sistema Operativo" sortBy="#{rsAmbiente.sistemaOperativo}" style="text-align: center;">
+										<h:outputText id="rsLbSistemaOperativo" value="#{rsAmbiente.sistemaOperativo}"/>
+									</p:column>
+									<p:column headerText="Base de Datos" sortBy="#{rsAmbiente.baseDatos}" style="text-align: center;">
+										<h:outputText id="rsLbBaseDatos" value="#{rsAmbiente.baseDatos}"/>
+									</p:column>
+									<p:column headerText="Hostname" sortBy="#{rsAmbiente.hostName}" style="text-align: center;" styleClass="width-175">
+										<h:outputText id="rsLbHostname" value="#{rsAmbiente.hostName}"/>
+									</p:column>
+									<p:column headerText="IP" sortBy="#{rsAmbiente.ip}" style="text-align: center;" styleClass="width-195">
+										<h:outputText id="rsLbIp" value="#{rsAmbiente.ip}"/>
+									</p:column>
+									<p:column headerText="Entrega de Equipo" sortBy="#{rsAmbiente.entregaEquipo}" style="text-align: center;" styleClass="width-90">
+										<h:outputText id="rsLbEntregaEquipo" value="#{rsAmbiente.entregaEquipo}"/>
+									</p:column>									
+								</p:dataTable>
+									
+				            </p:tab>				            
+				            <p:tab title="Incidentes (#{superUsrFollowMB.numIncidentes})">
+								<p:dataTable id="tblIncidentes" value="#{superUsrFollowMB.listIncidentes}" var="rsIncidentes" styleClass="font-13" reflow="true" >
+									<p:column headerText="Opciones" styleClass="text-center width-90">
+																					
+										<p:commandButton 
+											id="updateIssueTable" 
+											disabled="#{rsIncidentes.estatus == 'CERRADO'}"
+											oncomplete="PF('verIssueProyecto').show()"
+											styleClass="ui-button-raised" 
+											icon="pi pi-sync"
+											title="Actualizar"
+											action="#{superUsrFollowMB.cargaFechasIncidente}"
+											update="templateForm:updateIssue"
+											process="@all">
+											<f:setPropertyActionListener value="#{rsIncidentes}"  target="#{superUsrFollowMB.incidenteUpdate}" />
+										</p:commandButton>
+									
+										<p:commandButton 
+											id="closeIssueTable" 
+											disabled="#{rsIncidentes.estatus == 'CERRADO'}"
+											oncomplete="PF('verDialogCerrarIssue').show()"
+											styleClass="ui-button-raised margin-left-10" 
+											icon="pi pi-times"
+											title="Cerrar incidente"
+											update="templateForm:dialogCerrarIssue"
+											process="@all">
+											<f:setPropertyActionListener value="#{rsIncidentes}"  target="#{superUsrFollowMB.incidenteClose}" />
+										</p:commandButton>
+												
+									</p:column>
+									<p:column headerText="Incidente" styleClass="text-center">
+										<p:outputLabel value="#{rsIncidentes.issueIncidente}"/>
+									</p:column>
+									<p:column headerText="Etapa" style="width: 130px" styleClass="text-center">
+										<p:outputLabel value="#{rsIncidentes.etapa}"/>
+									</p:column>
+									<p:column headerText="Responsable" styleClass="text-center">
+										<p:outputLabel value="#{rsIncidentes.responsable.area}"/>
+									</p:column>
+									<p:column headerText="Fecha Inicio" styleClass="text-center">
+										<p:outputLabel value="#{rsIncidentes.fechaInicio}"/>
+									</p:column>
+									<p:column headerText="Fecha Solución" styleClass="text-center">
+										<p:outputLabel value="#{rsIncidentes.fechaResolucion}"/>
+									</p:column>
+									<p:column headerText="Detalles" styleClass="text-center">
+										<p:outputLabel value="#{rsIncidentes.detalles}"/>
+									</p:column>
+									<p:column headerText="Estatus" styleClass="text-center">
+										<p:outputLabel styleClass="customer-badge status-incidente-#{rsIncidentes.estatus}" value="#{rsIncidentes.estatus}"/>
+									</p:column>
+								</p:dataTable>
+				            </p:tab>
+				        </p:accordionPanel>
+						
+					</div>
+				</div>
+			</div>
+			
+			<p:dialog id="updateAmbiente" widgetVar="verAmbiente" header="Actualizar Ambiente" 
+					minHeight="50" width="700" showEffect="fade" hideEffect="fade" modal="true">
+					
+					<h:panelGroup id="ambienteUpdate">
+						<div class="container">
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpAmbiente" value="Ambiente:" styleClass="width-complete"/>
+									
+									<p:selectOneMenu id="inUpAmbiente" value="#{superUsrFollowMB.ambienteUpdate.tipoAmbiente.idTipoAmbiente}" placeholder="Ambiente"
+										styleClass="width-complete" style="min-width: 100% !important">
+										<f:selectItems value="#{superUsrFollowMB.listTipoAmbiente}" var="tpAmbiente" 
+											itemLabel="#{tpAmbiente.tipoAmbiente}" itemValue="#{tpAmbiente.idTipoAmbiente}"/>
+									</p:selectOneMenu>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpCPU" value="CPU´s:" styleClass="width-complete"/>
+									<p:inputText id="inUpCPU" placeholder="CPU" styleClass="width-complete"
+										value="#{superUsrFollowMB.ambienteUpdate.cpu}" autocomplete="off">
+										<p:keyFilter mask="num" />
+									</p:inputText>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpMemoria" value="Memoria:" styleClass="width-complete"/>
+									<p:inputText id="inUpMemoria" placeholder="Memoria" styleClass="width-complete"
+										value="#{superUsrFollowMB.ambienteUpdate.memoria}" autocomplete="off">
+										<p:keyFilter mask="num" />
+									</p:inputText>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpDiscoDuro" value="Disco Duro:" styleClass="width-complete"/>
+									<p:inputText id="inUpDiscoDuro" placeholder="Disco Duro" styleClass="width-complete"
+										value="#{superUsrFollowMB.ambienteUpdate.discoDuro}" autocomplete="off">
+										<p:keyFilter mask="num" />
+									</p:inputText>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpUnidad" value="Unidad de Medida HDD:" styleClass="width-complete"/>
+									<p:selectOneMenu id="inUpUnidad" value="#{superUsrFollowMB.ambienteUpdate.unidadMedidaDD}" 
+										styleClass="width-complete" style="min-width: 100% !important">
+										<f:selectItem itemLabel="Mb" itemValue="Mb"/>
+										<f:selectItem itemLabel="Gb" itemValue="Gb"/>
+										<f:selectItem itemLabel="Tb" itemValue="Tb"/>
+									</p:selectOneMenu>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpSistemaOperatovo" value="Sistema Operativo:" styleClass="width-complete"/>
+									<p:inputText id="inUpSistemaOperativo" placeholder="Sistema Operativo" styleClass="width-complete"
+									value="#{superUsrFollowMB.ambienteUpdate.sistemaOperativo}" autocomplete="off"/>
+								</div>						
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpBaseDatos" value="Base de Datos:" styleClass="width-complete"/>
+									<p:inputText id="inUpBaseDatos" placeholder="Base de Datos" styleClass="width-complete"
+									value="#{superUsrFollowMB.ambienteUpdate.baseDatos}" autocomplete="off"/>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpHostname" value="Hostname:" styleClass="width-complete"/>
+									<p:inputText id="inUpHostname" placeholder="Hostname" styleClass="width-complete #{superUsrFollowMB.styleErrorHost}"
+										value="#{superUsrFollowMB.ambienteUpdate.hostName}" autocomplete="off" maxlength="25">
+										<p:ajax event="change" listener="#{superUsrFollowMB.VerificaHost}" 
+											update="templateForm:ambienteUpdate" process="@this" />
+									</p:inputText>
+									<p:outputLabel id="lbMsgHost" value="#{superUsrFollowMB.msgHost}" rendered="#{superUsrFollowMB.msgHost != ''}"
+										styleClass="width-complete color-red" />
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpIP" value="IP:" styleClass="width-complete"/>
+									<p:inputText id="inUpIP" placeholder="IP" styleClass="width-complete #{superUsrFollowMB.styleErrorIp}" 
+										value="#{superUsrFollowMB.ambienteUpdate.ip}" autocomplete="off" maxlength="30">
+										<p:ajax event="change" listener="#{superUsrFollowMB.VerificaIp}" 
+											update="templateForm:ambienteUpdate" process="@all" />
+									</p:inputText>								
+									<p:outputLabel id="lbUpMsgIp" value="#{superUsrFollowMB.msgIP}" rendered="#{superUsrFollowMB.msgIP != ''}"
+										styleClass="width-complete color-red" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpEntrega" value="Entrega de Equipo:" styleClass="width-complete"/>
+									
+									<p:calendar id="inUpFecEntrega" navigator="true" required="false" styleClass="input-form"
+										pattern="yyyy-mm-dd" locale="es" value="#{superUsrFollowMB.ambienteUpdate.entregaEquipoDate}"
+										placeholder="Entrega de Equipo" disabledWeekends="true">
+										<p:ajax event="dateSelect" listener="#{superUsrFollowMB.AsignaFechaEntrega}"/>
+										<p:ajax event="keyup" listener="#{superUsrFollowMB.AsignaFechaEntrega}" />
+									</p:calendar>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-sm-12">
+									<p:outputLabel id="lbComentariosUpdate" value="Comentarios:" styleClass="width-complete"/>
+									<p:inputTextarea styleClass="input-form" maxlength="500" value="#{superUsrFollowMB.ambienteUpdate.comentario}" />
+								</div>
+							</div>
+						</div>
+						<br/>
+						<div class="container text-center">
+							<div class="row">
+								<div class="col-2"></div>
+								<div class="col-4">
+									<p:commandButton id="btnCerrarIssueModal" 
+										icon="pi pi-check" 
+										oncomplete="PF('verAmbiente').show()" 
+										value="Guardar" ajax="false"
+					                	styleClass="ui-button-raised" 
+					                	actionListener="#{superUsrFollowMB.ActualizaAmbiente}"
+					                	update="InfraPanel"
+					                	process="@all">
+					                </p:commandButton>			                
+								</div>
+								<div class="col-4">
+									<p:commandButton value="Cancelar" icon="pi pi-times"
+										styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+										action="#{superUsrFollowMB.iniciaObject}" 
+										onclick="PF('verAmbiente').hide()"/>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>				
+				</p:dialog>
+				
+				<p:dialog id="borrarAmbiente" widgetVar="verBorrarAmbiente" header="Eliminar Ambiente #{superUsrFollowMB.ambienteDelete.hostName}"
+					minHeight="50" width="700" showEffect="fade" hideEffect="fade" modal="true">
+					
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<p:outputLabel id="lbPregunta" value="¿Desea eliminar el ambiente ''#{superUsrFollowMB.ambienteDelete.hostName}''?" style="font-size: 20px;"/>
+							
+								<p:outputLabel id="lbComentrario" value="El ambiente se eliminará permanentemente"/>
+							</div>
+						</div>
+					</div>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton id="btnEliminar" 
+									icon="pi pi-check" 
+									oncomplete="PF('verBorrarAmbiente').show()" 
+									value="Eliminar" ajax="false"
+				                	styleClass="ui-button-raised" 
+				                	actionListener="#{superUsrFollowMB.eliminarAmbiente}"
+				                	update="InfraPanel"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-4">
+								<p:commandButton value="Cancelar" icon="pi pi-times"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verBorrarAmbiente').hide()"/>
+							</div>
+						</div>
+					</div>					
+				</p:dialog>
+				
+			
+				<p:dialog id="updateIssue" widgetVar="verIssueProyecto" header="Actualizar Incidente" 
+					minHeight="50" width="700" showEffect="fade" hideEffect="fade" modal="true">
+					
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-4">
+								<p:outputLabel styleClass="font-weight-500" value="Incidente"/>
+								<p:inputText styleClass="input-form" value="#{superUsrFollowMB.incidenteUpdate.issueIncidente}"/>
+							</div>
+							<div class="col-sm-4">
+								<p:outputLabel styleClass="font-weight-500" value="Responsable"/>
+								<p:selectOneMenu id="slcResponsableModal" value="#{superUsrFollowMB.incidenteUpdate.responsable.idResponable}" 
+									styleClass="input-form " style="min-width: 187px !important">
+									<f:selectItem itemLabel="- Selecione -" itemValue="0"/>
+									<f:selectItems value="#{superUsrFollowMB.listResponsables}" 
+										var="responsable" itemLabel="#{responsable.area}" itemValue="#{responsable.idResponable}"/>
+								</p:selectOneMenu>
+							</div>
+							<div class="col-sm-4">
+								<p:outputLabel styleClass="font-weight-500" value="Fecha Inicio"/>
+								<p:calendar id="inFecIniInciModal" navigator="true" required="false" styleClass="input-form"
+									pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+									value="#{superUsrFollowMB.fechaInicioIncidente}"
+									disabledWeekends="true"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<p:outputLabel styleClass="font-weight-500" value="Fecha de Solución"/>
+								<p:calendar id="inFecFinInciModal" navigator="true" required="false" styleClass="input-form"
+									pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+									value="#{superUsrFollowMB.fechaFinIncidente}"
+									disabledWeekends="true"/>
+							</div>
+							<div class="col-sm-4">
+								<p:outputLabel styleClass="font-weight-500" value="Etapa"/>
+								<p:inputText styleClass="input-form" maxlength="200" value="#{superUsrFollowMB.proyectoSeguimiento.faseActual}" disabled="true"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<p:outputLabel styleClass="font-weight-500" value="Detalles"/>
+								<p:inputTextarea styleClass="input-form" maxlength="200" value="#{superUsrFollowMB.incidenteUpdate.detalles}"/>
+							</div>
+						</div>
+					</div>
+					<div class="container">			
+						<div class="row">
+							<br/>
+						</div>
+					</div>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton id="btnGuardaUpdateIssue" oncomplete="PF('verIssueProyecto').show()" 
+									value="Guardar" ajax="false"
+									icon="pi pi-check"
+									actionListener="#{superUsrFollowMB.UpdateIncidente}"
+				                	styleClass="ui-button-raised" 
+				                	update="pnlMsgSucc pnlRTO"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-4">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verIssueProyecto').hide()"/>
+							</div>
+						</div>
+					</div>				
+				</p:dialog>
+				
+				<p:dialog id="dialogCerrarIssue" widgetVar="verDialogCerrarIssue" header="Cerrar el Incidente" 
+					minHeight="40" width="350" showEffect="fade" hideEffect="fade" modal="true">
+					
+					<h:panelGroup id="caseFinalDateEmpty" rendered="#{superUsrFollowMB.incidenteClose.fechaResolucion == null}">
+						<div class="container text-center">
+							<div class="row">
+								<div class="col">
+									<p:outputLabel id="lbMgsCloseIssue" value="Para cerrar el Incidente ''#{superUsrFollowMB.incidenteClose.issueIncidente}'', debe llenar la fecha de resolución"/>
+								</div>
+							</div>
+						</div>
+						
+						<div class="container text-center">
+							<div class="row">
+								<div class="col-12">
+									<p:commandButton value="Aceptar" 
+										icon="pi pi-check" 
+										styleClass="ui-confirmdialog-no ui-button-raised" 
+										onclick="PF('verDialogCerrarIssue').hide()"/>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+					<h:panelGroup id="caseAllComplete" rendered="#{superUsrFollowMB.incidenteClose.fechaResolucion != null}">
+						<div class="container text-center">
+							<div class="row">
+								<div class="col">
+									<p:outputLabel id="lbPreguntaIssue" value="¿Desea cerrar el Incidente ''#{superUsrFollowMB.incidenteClose.issueIncidente}'' ?"/>
+								</div>
+							</div>
+						</div>
+						<div class="container text-center">
+							<div class="row">
+								<div class="col-2"></div>
+								<div class="col-4">
+									<p:commandButton id="btnTerminarIssueModal" oncomplete="PF('verDialogCerrarIssue').show()" 
+										value="Si" ajax="false"
+										icon="pi pi-check"
+					                	styleClass="ui-button-raised" 
+					                	actionListener="#{superUsrFollowMB.CerrarIncidente}"
+					                	update="pnlMsgSucc pnlMsgErr pnlSuperFollow"
+					                	process="@all">
+					                </p:commandButton>			                
+								</div>
+								<div class="col-4">
+									<p:commandButton value="No" icon="pi pi-times" 
+										styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+										onclick="PF('verDialogCerrarIssue').hide()"/>
+								</div>
+							</div>
+						</div>					
+					</h:panelGroup>
+				</p:dialog>
+				
+				<p:dialog id="cancelarProyecto" widgetVar="verCancelarProyecto" header="Cancelar el proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<h3><p:outputLabel id="lbPreguntaCancelacion" value="¿Desea cancelar el proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}'' ?"/></h3>
+							</div>
+						</div>
+					</div>
+					<div class="container">			
+						<div class="row">
+							<div class="col">
+								<p:outputLabel value="Indique el motivo de cancelación*:"/>								
+								<p:inputTextarea id="txtAreaComentCancel" styleClass="text-center width-complete" 
+									value="#{superUsrFollowMB.comentarioCancelacion}"
+									maxlength="1000"/>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton id="btCancelarProyecto" oncomplete="PF('verCancelarProyecto').show()" 
+									value="Cancelar Proyecto" 
+									ajax="false"
+									icon="pi pi-check"
+									actionListener="#{superUsrFollowMB.cancelarProyecto}"
+				                	styleClass="ui-button-raised" 
+				                	update="pnlSuperFollow"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-6">
+								<p:commandButton value="No Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verCancelarProyecto').hide()"/>
+							</div>
+						</div>
+					</div>				
+				</p:dialog>
+				
+				<p:dialog id="activarProyecto" widgetVar="verActivarProyecto" header="Activar el proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="600" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<h3><p:outputLabel id="lbPreguntaActivacion" value="¿Desea activar el proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}'' ?"/></h3>
+							</div>
+						</div>
+					</div>
+					<div class="container">
+						<div class="row">
+							<div class="col">
+								<p:outputLabel value="Indique el motivo de activación*:"/>
+								<p:inputTextarea id="txtAreaComentActive" styleClass="text-center width-complete" 
+									value="#{superUsrFollowMB.comentarioActivacion}"
+									maxlength="1000"/>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton id="btActivarProyecto" oncomplete="PF('verActivarProyecto').show()" 
+									value="Activar Proyecto" 
+									ajax="false"
+									icon="pi pi-check"								
+									actionListener="#{superUsrFollowMB.activarProyecto}"
+				                	styleClass="ui-button-raised" 
+				                	update="pnlSuperFollow"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verActivarProyecto').hide()"/>
+							</div>
+						</div>
+					</div>				
+				</p:dialog>
+				
+				<p:dialog id="eliminarProyecto" widgetVar="verEliminarProyecto" header="Eliminar el proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-sm-12">
+								<p>
+									<p:outputLabel id="lbAvisoEliminacion" value="¿Desea eliminar el proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}''?"/>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton 
+									id="btnEliminarProyecto1"
+				                	value="Eliminar" 
+				                	oncomplete="PF('verConfirmacionEliminarProyecto').show()" 
+				                	styleClass="ui-button-raised">
+						        </p:commandButton>        
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verEliminarProyecto').hide()"/>
+							</div>
+						</div>
+					</div>
+					
+				</p:dialog>
+				
+				<p:dialog id="eliminarConfirmacionProyecto" widgetVar="verConfirmacionEliminarProyecto" header="Confirmación para eliminar el proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-sm-12">
+								<p>
+									<p:outputLabel id="lbPreguntaEliminacion" value="¿Está seguro de eliminar el proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}?"/>
+								</p>
+								<p>
+									<p:outputLabel id="lbPreguntaEliminacion2" 
+									value="Si decide proceder, el proyecto será elimnado permanentemente en conjunto con las fases que tengan relación, esta acción es irreversible"/>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton 
+									id="btnConfirmaEliminar"
+				                	value="Si, Eliminar" 
+				                	actionListener="#{superUsrFollowMB.eliminaProyecto}"
+				                	oncomplete="PF('verConfirmacionEliminarProyecto').show()" 
+				                	styleClass="ui-button-raised">
+						        </p:commandButton>        
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verConfirmacionEliminarProyecto').hide()"
+				                	update="pnlSuperFollow"
+				                	process="@all"/>
+							</div>
+						</div>
+					</div>
+				</p:dialog>
+				
+				<p:dialog id="eliminarConfirmacionF60" widgetVar="verConfirmacionEliminarF60" header="Eliminar el seguimiento F60 del proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-sm-12">
+								<p>
+									<p:outputLabel id="lbPreguntaEliminacionF60" value="¿Desea eliminar el seguimiento F60 del proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}?"/>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton 
+									id="btnConfirmaEliminarF60"
+				                	icon="pi pi-check" 
+				                	value="Eliminar"
+				                	ajax="false"
+				                	actionListener="#{superUsrFollowMB.eliminaFaseF60}"
+				                	oncomplete="PF('verConfirmacionEliminarProyecto').hide()" 
+				                	styleClass="ui-button-raised"
+				                	update="@all">
+						        </p:commandButton>
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" 
+									icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verConfirmacionEliminarF60').hide()"
+				                	update="pnlSuperFollow"
+				                	process="@all"/>
+							</div>
+						</div>
+					</div>
+				</p:dialog>
+				
+				<p:dialog id="eliminaSeguimientoInfra" widgetVar="verEliminaSeguimientoInfra" header="Eliminar Infraestructura del proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<h3><p:outputLabel id="lbPreguntaDeleteInfra" value="¿Desea eliminar Infraestructura del proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}'' ?"/></h3>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton 
+									id="btnDeleteInfra" 
+									oncomplete="PF('verEliminaSeguimientoInfra').show()" 
+									value="Eliminar" 
+									ajax="false"
+									icon="pi pi-check"								
+									actionListener="#{superUsrFollowMB.eliminaFaseInfraestructura}"
+				                	styleClass="ui-button-raised" 
+				                	update="pnlSuperFollow"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verEliminaSeguimientoInfra').hide()"/>
+							</div>
+						</div>
+					</div>				
+				</p:dialog>
+				
+				<p:dialog id="eliminaSeguimientoAplicativo" widgetVar="verEliminaSeguimientoAplicativo" header="Eliminar Aplicativo del proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<h3><p:outputLabel id="lbPreguntaDeleteAplicativo" value="¿Desea eliminar Aplicativo del proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}'' ?"/></h3>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton 
+									id="btnDeleteAplicativo" 
+									oncomplete="PF('verEliminaSeguimientoAplicativo').show()" 
+									value="Eliminar" 
+									ajax="false"
+									icon="pi pi-check"								
+									actionListener="#{superUsrFollowMB.eliminaFaseAplicativo}"
+				                	styleClass="ui-button-raised" 
+				                	update="pnlSuperFollow"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verEliminaSeguimientoAplicativo').hide()"/>
+							</div>
+						</div>
+					</div>				
+				</p:dialog>
+				
+				<p:dialog id="eliminaSeguimientoPreATP" widgetVar="verEliminaSeguimientoPreATP" header="Eliminar Pre ATP´s del proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<h3><p:outputLabel id="lbPreguntaDeletePreATP" value="¿Desea eliminar Pre ATP´s del proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}'' ?"/></h3>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton 
+									id="btnDeletePreATP" 
+									oncomplete="PF('verEliminaSeguimientoPreATP').show()" 
+									value="Eliminar" 
+									ajax="false"
+									icon="pi pi-check"								
+									actionListener="#{superUsrFollowMB.eliminaFasePreATP}"
+				                	styleClass="ui-button-raised" 
+				                	update="pnlSuperFollow"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verEliminaSeguimientoPreATP').hide()"/>
+							</div>
+						</div>
+					</div>				
+				</p:dialog>
+				
+				<p:dialog id="eliminaSeguimientoATP" widgetVar="verEliminaSeguimientoATP" header="Eliminar ATP´s del proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<h3><p:outputLabel id="lbPreguntaDeleteATP" value="¿Desea eliminar ATP´s del proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}'' ?"/></h3>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton 
+									id="btnDeleteATP" 
+									oncomplete="PF('verEliminaSeguimientoATP').show()" 
+									value="Eliminar" 
+									ajax="false"
+									icon="pi pi-check"								
+									actionListener="#{superUsrFollowMB.eliminaFaseATP}"
+				                	styleClass="ui-button-raised" 
+				                	update="pnlSuperFollow"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verEliminaSeguimientoATP').hide()"/>
+							</div>
+						</div>
+					</div>				
+				</p:dialog>
+				
+				<p:dialog id="eliminaSeguimientoRTO" widgetVar="verEliminaSeguimientoRTO" header="Eliminar RTO del proyecto #{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}"
+					minHeight="50" width="550" showEffect="fade" hideEffect="fade" modal="true">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<h3><p:outputLabel id="lbPreguntaDeleteRTO" value="¿Desea eliminar RTO del proyecto ''#{superUsrFollowMB.proyectoSeguimiento.nombreProyecto}'' ?"/></h3>
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-6">
+								<p:commandButton 
+									id="btnDeleteRTO" 
+									oncomplete="PF('verEliminaSeguimientoRTO').show()" 
+									value="Eliminar" 
+									ajax="false"
+									icon="pi pi-check"								
+									actionListener="#{superUsrFollowMB.eliminaFaseRTO}"
+				                	styleClass="ui-button-raised" 
+				                	update="pnlSuperFollow"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-6">
+								<p:commandButton value="Cancelar" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verEliminaSeguimientoRTO').hide()"/>
+							</div>
+						</div>
+					</div>				
+				</p:dialog>
+			
+		</h:panelGroup>
+		
+	</ui:define>
+</ui:composition>

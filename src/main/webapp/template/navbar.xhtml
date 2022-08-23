@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:panelGroup id="barraNavegacion" >
+	<nav class="navbar navbar-expand-md bg-light navbar-light">
+	  <a class="navbar-brand" href="/SAPI">SAPI</a>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
+	  <div class="collapse navbar-collapse" id="collapsibleNavbar">
+		<ul class="navbar-nav">
+			<h:panelGroup rendered="#{usuarioSesion.permisos.registros == true}">
+		      	<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Registro</a>
+					<div class="dropdown-menu">
+				      <a class="dropdown-item" href="carga-proyecto.html">Nuevo Proyecto</a>
+				      <a class="dropdown-item" href="portafolio-empresarial.html">Portafolio Empresarial</a>
+				    </div>
+				</li>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{usuarioSesion.permisos.asignacion == true}">
+		      	<li class="nav-item">
+	        		<a class="nav-link" href="asignacion.html">Asignación</a>
+	      		</li>
+	      	</h:panelGroup>
+			<h:panelGroup rendered="#{usuarioSesion.permisos.seguimiento == true}">
+		      	<li class="nav-item">
+	        		<a class="nav-link" href="seguimiento.html">Seguimiento</a>
+	      		</li>
+	      	</h:panelGroup>
+			<h:panelGroup rendered="#{usuarioSesion.permisos.infraestructura == true}">
+		      	<li class="nav-item">
+	        		<a class="nav-link" href="infraestructura.html">Infraestructura</a>
+	      		</li>
+	      	</h:panelGroup>
+			<h:panelGroup rendered="#{usuarioSesion.permisos.seguimientoGrl == true}">
+		      	<li class="nav-item">
+	        		<a class="nav-link" href="super-seguimiento.html">Seguimiento General</a>
+	      		</li>
+	      	</h:panelGroup>
+			<h:panelGroup rendered="#{usuarioSesion.permisos.funcionesOperativas == true}">
+		      	<li class="nav-item">
+	        		<a class="nav-link" href="funciones.html">Funciones Operativas</a>
+	      		</li>
+	      	</h:panelGroup>
+			<h:panelGroup rendered="#{usuarioSesion.permisos.reportes == true}">
+		      	<li class="nav-item">
+	        		<a class="nav-link" href="reportes.html">Reportes</a>
+	      		</li>
+	      	</h:panelGroup>
+	    </ul>
+	    <ul class="navbar-nav ml-auto">
+		    <li class="nav-item dropdown">
+		      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		      	<p:outputLabel value="#{usuarioSesion.nombre} #{usuarioSesion.primerApellido} #{usuarioSesion.segundoApellido}"/>
+		      </a>
+		      <div class="dropdown-menu text-center collapse" aria-labelledby="navbarDropdown">
+		      	<p:link styleClass="dropdown-item" value="Cambiar Contraseña" outcome="/pages/cambiopwd.html"/>
+		        <p:commandLink value="Cerrar Sesión" styleClass="ui-button-flat dropdown-item" actionListener="#{loginMB.CierraSesion}"/>
+		      </div>
+		    </li>
+	  	</ul>
+	  </div>  
+	</nav>
+	</h:panelGroup>
+</html>

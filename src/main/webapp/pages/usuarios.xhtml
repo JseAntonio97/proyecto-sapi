@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:dataTable id="tblUsuarios" paginator="true" rows="15" rowsPerPageTemplate="5,10,15"  reflow="true" lazy="false"
+		value="#{funOperativeMB.listUsuarios}" var="usuario"
+		styleClass="font-13" size="small">
+
+		<f:facet name="header">
+			<div class="justify-content-center text-center">
+				<b><h:outputText value="Usuarios Registrados" /></b>
+			</div>
+			<p:commandButton value="Nuevo Usuario" styleClass="ui-button-raised" icon="pi pi-plus-circle" oncomplete="PF('nuevoUsuario').show(); "/>
+		</f:facet>
+
+		<p:column headerText="Nombre">
+			<p:outputLabel value="#{usuario.nombre} #{usuario.primerApellido} #{usuario.segundoApellido}" styleClass="font-13"/>
+		</p:column>
+
+		<p:column headerText="Usuario" style="width: 50px;">
+			<p:outputLabel value="#{usuario.nombreUsuario}" styleClass="font-13"/>
+		</p:column>
+
+		<p:column headerText="Correo" style="width: 260px;">
+			<p:outputLabel value="#{usuario.correo}" styleClass="font-13"/>
+		</p:column>
+
+		<p:column headerText="Lider"  style="width: 245px;">
+			<p:outputLabel value="#{usuario.lider.nombre} #{usuario.lider.primerApellido} #{usuario.lider.segundoApellido}" styleClass="font-13"/>
+		</p:column>
+
+		<p:column headerText="Estatus" style="width: 80px; " styleClass="text-center">
+			<p:outputLabel value="#{usuario.estatus}" styleClass="text-center customer-badge estatus-#{usuario.estatus} font-13"/>
+		</p:column>
+
+		<p:column headerText="Actualizar" style="width: 60px;">
+			<p:commandButton 
+				styleClass="ui-button-raised" 
+				title="Actualizar" 
+				icon="pi pi-sync" 
+				update="templateForm:updateUser"
+				process="@all" 
+				oncomplete="PF('actualizaUsuario').show();">
+				<f:setPropertyActionListener value="#{usuario}" target="#{funOperativeMB.usuarioUpdate}" />
+			</p:commandButton>
+		</p:column>
+
+		<p:column headerText="On/Off" style="width: 55px;">
+			<p:commandButton 
+				id="btnActivar"
+				styleClass="ui-button-raised ui-button-danger" 
+				title="Activar" 
+				icon="pi pi-power-off"
+				rendered="#{usuario.estatus == 'INACTIVO'}"
+				oncomplete="PF('verUsuarioOnOff').show()"
+				update="templateForm:usuarioOnOff"
+				process="@all">			
+				<f:setPropertyActionListener value="#{usuario}" target="#{funOperativeMB.usuarioOnOff}" />
+			</p:commandButton>
+				
+			<p:commandButton 
+				id="btnDesactivar"
+				styleClass="ui-button-raised ui-button-success" 
+				title="Desactivar" 
+				icon="pi pi-power-off"
+				rendered="#{usuario.estatus == 'ACTIVO'}"
+				oncomplete="PF('verUsuarioOnOff').show()"
+				update="templateForm:usuarioOnOff"
+				process="@all" >
+				<f:setPropertyActionListener value="#{usuario}" target="#{funOperativeMB.usuarioOnOff}"/>
+			</p:commandButton>
+		</p:column>
+		
+	</p:dataTable>
+	
+</html>

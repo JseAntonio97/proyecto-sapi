@@ -1,0 +1,1256 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="../template/template.xhtml">
+
+	<ui:define name="contenido">
+		<h:panelGroup id="pnlCatalogos">
+
+			<h:panelGroup id="pnlMsgSucc"
+				rendered="#{funOperativeMB.msgSuccess != ''}">
+				<div class="container pad-top-1">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="alert alert-success alert-dismissible">
+								<a href="#" class="close" data-dismiss="alert"
+									aria-label="close">&#xD7;</a> <strong style="font-size: 15px;">
+									&#10003; </strong> -
+								<h:outputLabel id="lbSatisfacorio"
+									value="#{funOperativeMB.msgSuccess}" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+
+			<h:panelGroup id="pnlMsgErr"
+				rendered="#{funOperativeMB.msgError != ''}">
+				<div class="container pad-top-1">
+					<div class="row">
+						<div class="col-12">
+							<div class="alert alert-danger alert-dismissible">
+								<a href="#" class="close" data-dismiss="alert"
+									aria-label="close">&#xD7;</a> <strong>Atención</strong> -
+								<p:outputLabel value="#{funOperativeMB.msgError}" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+
+			<div class="container">
+				<p:tabView activeIndex="#{funOperativeMB.pestaniaActiva}" >
+					<p:tab title="Catálogos">
+						<h:panelGroup id="panelCatalogos">
+						
+							<div class="container">
+							
+								<p:accordionPanel multiple="true" widgetVar="multiple" activeIndex="">
+					            	<p:tab title="Estrategias" >
+										<div class="row">
+											<div class="col-sm-12">
+												<p:dataTable id="tblEstrategias" paginator="true" rows="10" rowsPerPageTemplate="5,10,15"
+													value="#{funOperativeMB.listEstrategias}" var="rsEstrategia" reflow="true" lazy="false"
+													styleClass="font-13" size="small">
+		
+													<f:facet name="header">
+														<div class="justify-content-center text-center">
+															<b><h:outputText value="Estrategias" /></b>
+														</div>
+														<p:commandButton value="Nueva Estrategia" styleClass="ui-button-raised" oncomplete="PF('verEstrategia').show(); " icon="pi pi-plus-circle"/>
+													</f:facet>
+		
+													<p:column headerText="Estrategia" sortBy="#{rsEstrategia.estrategia}">
+														<p:outputLabel value="#{rsEstrategia.estrategia}" styleClass="font-13"/>
+													</p:column>
+													
+													<p:column headerText="Estatus" sortBy="#{rsEstrategia.estatus}" styleClass="text-center">
+														<p:outputLabel value="#{rsEstrategia.estatus}" styleClass="customer-badge estatus-#{rsEstrategia.estatus} font-13"/>
+													</p:column>
+													
+													<p:column headerText="Editar" style="width: 50px;">
+														<p:commandButton id="updateEstrategiasTable"
+															oncomplete="PF('verEstrategiaUpdate').show()"
+															styleClass="ui-button-raised" 
+															title="Actualizar"
+															icon="pi pi-sync" 
+															update="templateForm:updateEstrategia" 
+															process="@all">
+															<f:setPropertyActionListener value="#{rsEstrategia}" target="#{funOperativeMB.estrategiaUpdate}"/>
+														</p:commandButton>
+													</p:column>
+													<p:column headerText="Activar/Desactivar" style="width: 100px;" styleClass="text-center">
+													
+														<p:commandButton id="activaEstrategiasTable"
+															oncomplete="PF('onOffModalEstrategias').show()"
+															styleClass="ui-button-raised ui-button-danger"
+															title="Activar" icon="pi pi-power-off" 
+															rendered="#{rsEstrategia.estatus == 'INACTIVO'}"
+															update="templateForm:onOffEstrategias"
+															process="@all">
+															<f:setPropertyActionListener value="#{rsEstrategia}" target="#{funOperativeMB.estrategiaOnOff}"/>
+														</p:commandButton>
+													
+														<p:commandButton id="desactivaEstrategiasTable"
+															oncomplete="PF('onOffModalEstrategias').show()"
+															styleClass="ui-button-raised ui-button-success"
+															title="Desactivar" icon="pi pi-power-off" 
+															rendered="#{rsEstrategia.estatus == 'ACTIVO'}"
+															update="templateForm:onOffEstrategias"
+															process="@all">
+															<f:setPropertyActionListener value="#{rsEstrategia}" target="#{funOperativeMB.estrategiaOnOff}"/>
+														</p:commandButton>
+														
+													</p:column>
+												</p:dataTable>
+											</div>
+										</div>
+									</p:tab>
+									
+					            	<p:tab title="Responsables" >
+										<div class="row pad-top-1">
+											<div class="col-sm-12 ">
+												<p:dataTable id="tblResponsables" paginator="true" rows="10" rowsPerPageTemplate="5,7,10,15"
+													value="#{funOperativeMB.listResponsables}" var="resul" reflow="true" lazy="false" 
+													styleClass="font-13" size="small">
+													<f:facet name="header">
+														<div class="justify-content-center text-center">
+															<b><h:outputText value="Responsables de incidentes" /></b>
+														</div>
+														<p:commandButton value="Nuevo Responsable" styleClass="ui-button-raised" oncomplete="PF('verResponsables').show(); " icon="pi pi-plus-circle"/>
+													</f:facet>
+													<p:column headerText="Nomenclatura" sortBy="#{resul.nomenclatura}" style="width: 112px;">
+														<p:outputLabel id="rsLbNomenclatura" value="#{resul.nomenclatura}" styleClass="font-13"/>
+													</p:column>
+													<p:column headerText="Área" sortBy="#{resul.area}">
+														<p:outputLabel id="rsLbArea" value="#{resul.area}" styleClass="font-13"/>
+													</p:column>
+													<p:column headerText="Responsable" sortBy="#{resul.responsable}">
+														<p:outputLabel id="rsLbResponsable" value="#{resul.responsable}" styleClass="font-13"/>
+													</p:column>
+													<p:column headerText="Estatus" sortBy="#{resul.estatus}" style="width: 95px;" styleClass="text-center" >
+														<p:outputLabel id="rsLbEstatus" value="#{resul.estatus}" styleClass="text-center customer-badge estatus-#{resul.estatus} font-13"/>
+													</p:column>
+		
+													<p:column headerText="Editar" style="width: 55px;">
+														<p:commandButton id="updateResponsablesTable" 
+															oncomplete="PF('verResponsablesUpdate').show()" 
+															styleClass="ui-button-raised" 
+															title="Actualizar" icon="pi pi-sync" 
+															update="templateForm:updateResponsables" 
+															process="@all">
+															<f:setPropertyActionListener value="#{resul}" target="#{funOperativeMB.responsableUpdate}" />
+														</p:commandButton>
+													</p:column>
+													<p:column headerText="On/Off" style="width: 55px;">
+													
+														<p:commandButton id="activarResponsableTable"
+															oncomplete="PF('verOnOffResponsable').show()"
+															styleClass="ui-button-raised ui-button-danger"
+															title="Activar" icon="pi pi-power-off" 
+															rendered="#{resul.estatus == 'INACTIVO'}"
+															update="templateForm:diaOnOffResponsables"
+															process="@all">
+															<f:setPropertyActionListener value="#{resul}" target="#{funOperativeMB.responsableOnOff}" />
+														</p:commandButton>
+													
+														<p:commandButton id="desActivarResponsableTable"
+															oncomplete="PF('verOnOffResponsable').show()"
+															styleClass="ui-button-raised ui-button-success"
+															title="Desactivar" icon="pi pi-power-off" 
+															rendered="#{resul.estatus == 'ACTIVO'}"
+															update="templateForm:diaOnOffResponsables"
+															process="@all">
+															<f:setPropertyActionListener value="#{resul}" target="#{funOperativeMB.responsableOnOff}" />
+														</p:commandButton>
+														
+													</p:column>
+												</p:dataTable>
+											</div>
+										</div>
+									</p:tab>
+									
+									<p:tab title="Ambientes" >
+										<div class="row pad-top-1">
+											<div class="col-sm-12 ">
+												<p:dataTable id="tblAmbientes" value="#{funOperativeMB.listTipoAmbiente}" var="tipoAmbiente"
+													paginator="true" rows="5" rowsPerPageTemplate="5,7,10,15"
+													reflow="true" lazy="false" styleClass="font-13" size="small">													
+													<f:facet name="header">
+														<div class="justify-content-center text-center">
+															<b><h:outputText value="Ambientes" /></b>
+														</div>
+														<p:commandButton value="Nuevo Ambiente" styleClass="ui-button-raised" oncomplete="PF('verAmbiente').show();"  icon="pi pi-plus-circle"/>
+													</f:facet>
+													<p:column headerText="Nombre del Ambiente" sortBy="#{tipoAmbiente.tipoAmbiente}" style="width: 112px;">
+														<p:outputLabel id="rsLbNomAmbiente" value="#{tipoAmbiente.tipoAmbiente}" styleClass="font-13"/>
+													</p:column>
+													<p:column headerText="Estatus" sortBy="#{tipoAmbiente.estatus}" style="width: 112px;" styleClass="text-center">
+														<p:outputLabel id="rsLbEstatus" value="#{tipoAmbiente.estatus}" styleClass="customer-badge estatus-#{tipoAmbiente.estatus} font-13"/>
+													</p:column>
+													<p:column headerText="Editar" style="width: 112px;">
+														<p:commandButton id="updateResponsablesTable" 
+															oncomplete="PF('verUpdateTipoAmbiente').show()" 
+															styleClass="ui-button-raised" 
+															title="Actualizar" 
+															icon="pi pi-sync" 
+															update="templateForm:updateTipoAmbiente" 
+															process="@all">
+															<f:setPropertyActionListener value="#{tipoAmbiente}" target="#{funOperativeMB.tipoAmbienteUpdate}" />
+														</p:commandButton>													
+													</p:column>
+													<p:column headerText="Activar/Inactivar" style="width: 112px;" styleClass="text-center">
+														
+														<p:commandButton id="activarResponsableTable"
+															oncomplete="PF('verOnOffTipoAmbiente').show()"
+															styleClass="ui-button-raised ui-button-danger"
+															title="Activar" icon="pi pi-power-off" 
+															rendered="#{tipoAmbiente.estatus == 'INACTIVO'}"
+															update="templateForm:diaOnOffTipoAmbiente"
+															process="@all">
+															<f:setPropertyActionListener value="#{tipoAmbiente}" target="#{funOperativeMB.tipoAmbienteOnOff}" />
+														</p:commandButton>
+													
+														<p:commandButton id="desActivarResponsableTable"
+															oncomplete="PF('verOnOffTipoAmbiente').show()"
+															styleClass="ui-button-raised ui-button-success"
+															title="Desactivar" icon="pi pi-power-off" 
+															rendered="#{tipoAmbiente.estatus == 'ACTIVO'}"
+															update="templateForm:diaOnOffTipoAmbiente"
+															process="@all">
+															<f:setPropertyActionListener value="#{tipoAmbiente}" target="#{funOperativeMB.tipoAmbienteOnOff}" />
+														</p:commandButton>
+														
+													</p:column>
+													
+												</p:dataTable>
+											</div>
+										</div>
+									</p:tab>
+									
+									<p:tab title="Direcciones" >
+										<div class="row pad-top-1">
+											<div class="col-sm-12 ">
+												<p:dataTable id="tblDirecciones" value="#{funOperativeMB.listDirecciones}" var="direccion"
+													paginator="true" rows="5" rowsPerPageTemplate="5,10,15"
+													reflow="true" lazy="false" styleClass="font-13" size="small">
+													<f:facet name="header">
+														<div class="justify-content-center text-center">
+															<b><h:outputText value="Direcciones" /></b>
+														</div>
+														<p:commandButton value="Nueva Dirección" styleClass="ui-button-raised" oncomplete="PF('verDireccionNueva').show();"  icon="pi pi-plus-circle"/>
+													</f:facet>
+													<p:column headerText="Dirección" style="width: 112px;">
+														<p:outputLabel value="#{direccion.direccion}" styleClass="font-13"/>
+													</p:column>
+													<p:column headerText="Estatus" style="width: 112px;"  styleClass="text-center">
+														<p:outputLabel value="#{direccion.estatus}"  styleClass="customer-badge estatus-#{direccion.estatus} font-13"/>
+													</p:column>
+													<p:column headerText="Editar" style="width: 112px;">
+														<p:commandButton id="btnUpdateDireccion" 
+															oncomplete="PF('verUpdateDireccion').show()" 
+															styleClass="ui-button-raised" 
+															title="Actualizar" icon="pi pi-sync" 
+															update="templateForm:dialogUpdateDireccion" 
+															process="@all">
+															<f:setPropertyActionListener value="#{direccion}" target="#{funOperativeMB.direccionUpdate}" />
+														</p:commandButton>
+													</p:column>
+													<p:column headerText="Activar/Desactivar" style="width: 112px;" styleClass="text-center">
+														
+														<p:commandButton id="activarDireccion"
+															oncomplete="PF('verOnOffDireccion').show()"
+															styleClass="ui-button-raised ui-button-danger"
+															title="Activar" icon="pi pi-power-off" 
+															rendered="#{direccion.estatus == 'INACTIVO'}"
+															update="templateForm:diaOnOffDireccion"
+															process="@all">
+															<f:setPropertyActionListener value="#{direccion}" target="#{funOperativeMB.direccionOnOff}" />
+														</p:commandButton>
+													
+														<p:commandButton id="desactivarDireccion"
+															oncomplete="PF('verOnOffDireccion').show()"
+															styleClass="ui-button-raised ui-button-success"
+															title="Desactivar" icon="pi pi-power-off" 
+															rendered="#{direccion.estatus == 'ACTIVO'}"
+															update="templateForm:diaOnOffDireccion"
+															process="@all">
+															<f:setPropertyActionListener value="#{direccion}" target="#{funOperativeMB.direccionOnOff}" />
+														</p:commandButton>
+														
+													</p:column>													
+													
+												</p:dataTable>
+											</div>
+										</div>
+									</p:tab>
+									
+									<p:tab title="Gerencias" >
+										<div class="row pad-top-1">
+											<div class="col-sm-12 ">
+												<p:dataTable id="tblGerencias" value="#{funOperativeMB.listGerencias}" var="gerencia"
+													paginator="true" rows="15" rowsPerPageTemplate="5,7,10,15,25"
+													reflow="true" lazy="false" styleClass="font-13" size="small">
+													<f:facet name="header">
+														<div class="justify-content-center text-center">
+															<b><h:outputText value="Gerencias" /></b>
+														</div>
+														<p:commandButton value="Nueva Gerencia" styleClass="ui-button-raised" oncomplete="PF('verGerenciaNueva').show();"  icon="pi pi-plus-circle"/>
+													</f:facet>
+													<p:column headerText="Gerencia">
+														<p:outputLabel value="#{gerencia.gerencia}" styleClass="font-13"/>
+													</p:column>
+													<p:column headerText="Estatus" style="width: 112px;" styleClass="text-center">
+														<p:outputLabel value="#{gerencia.estatus}" styleClass="customer-badge estatus-#{gerencia.estatus} font-13"/>
+													</p:column>
+													<p:column headerText="Dirección" style="width: 112px;" styleClass="text-center">
+														<p:outputLabel value="#{gerencia.direccion.direccion}" styleClass="font-13"/>
+													</p:column>
+													<p:column headerText="Editar" style="width: 112px;" styleClass="text-center">
+														<p:commandButton id="btnUpdateGerencia" 
+															oncomplete="PF('verUpdateGerencia').show()" 
+															styleClass="ui-button-raised" 
+															title="Actualizar" icon="pi pi-sync" 
+															update="templateForm:dialogUpdateGerencia" 
+															process="@all">
+															<f:setPropertyActionListener value="#{gerencia}" target="#{funOperativeMB.gerenciaUpdate}" />
+														</p:commandButton>
+													</p:column>
+													<p:column headerText="Activar/Desactivar" style="width: 112px;" styleClass="text-center">
+														
+														<p:commandButton id="activarGerencia"
+															oncomplete="PF('verOnOffGerencia').show()"
+															styleClass="ui-button-raised ui-button-danger"
+															title="Activar" icon="pi pi-power-off" 
+															rendered="#{gerencia.estatus == 'INACTIVO'}"
+															update="templateForm:diaOnOffGerente"
+															process="@all">
+															<f:setPropertyActionListener value="#{gerencia}" target="#{funOperativeMB.gerenciaOnOff}" />
+														</p:commandButton>
+													
+														<p:commandButton id="desactivarGerencia"
+															oncomplete="PF('verOnOffGerencia').show()"
+															styleClass="ui-button-raised ui-button-success"
+															title="Desactivar" icon="pi pi-power-off" 
+															rendered="#{gerencia.estatus == 'ACTIVO'}"
+															update="templateForm:diaOnOffGerente"
+															process="@all">
+															<f:setPropertyActionListener value="#{gerencia}" target="#{funOperativeMB.gerenciaOnOff}" />
+														</p:commandButton>
+														
+													</p:column>													
+													
+												</p:dataTable>
+											</div>
+										</div>
+									</p:tab>
+								</p:accordionPanel>
+							</div>
+						</h:panelGroup>
+					</p:tab>
+					
+					<p:tab title="Usuarios">
+						<ui:include src="/pages/usuarios.xhtml"></ui:include>
+					</p:tab>
+
+					<p:tab title="SLA´s">
+						<ui:include src="/pages/slas.xhtml"></ui:include>
+					</p:tab>
+				</p:tabView>
+			</div>
+			
+			<p:dialog widgetVar="verEstrategia" modal="true" showEffect="clip" resizable="false" header="Ingresar Estrategia">
+				<p:panelGrid columns="2">
+					<p:outputLabel id="lblEstrategia" value="Estrategia:" styleClass="width-complete" />
+					<p:inputText id="inEstrategia" placeholder=" Estrategia" styleClass="width-complete" value="#{funOperativeMB.estrategiaNew}" />
+					<p:column />
+					<p:commandButton id="btnAddEstrategia" value="Guardar"
+						styleClass="ui-button-raised button-170-px" ajax="false"
+						icon="pi pi-save"
+						actionListener="#{funOperativeMB.NuevaEstrategia}"
+						update="panelCatalogos"
+						oncomplete="PF('verEstrategia').hide();" process="@all" />
+				</p:panelGrid>
+			</p:dialog>
+			
+			<p:dialog id="updateEstrategia" widgetVar="verEstrategiaUpdate" header="Actualizar Estrategia" minHeight="40" width="400"
+				showEffect="clip" hideEffect="clip" modal="true">
+
+				<h:panelGroup id="EstrategiasUpdate">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">
+								<p:outputLabel id="lblEstrategiaUpdate"
+									value="Estrategia:" styleClass="width-complete" />
+								<p:inputText id="inEstrategiaUpdate"
+									placeholder="Estrategia" styleClass="width-complete"
+									value="#{funOperativeMB.estrategiaUpdate.estrategia}"
+									autocomplete="off">
+								</p:inputText>
+							</div>
+						</div>
+					</div>
+					<br />
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton id="btnCerrarEstrategiasModal"
+									icon="pi pi-check" oncomplete="PF('verEstrategiaUpdate').show()"
+									value="Guardar" ajax="false"
+									styleClass="ui-button-raised"
+									actionListener="#{funOperativeMB.UpdateEstrategia}" 
+									update="pnlCatalogos"
+									process="@all">
+								</p:commandButton>
+							</div>
+							<div class="col-4">
+								<p:commandButton value="Cancelar" icon="pi pi-times"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+									onclick="PF('verEstrategiaUpdate').hide()" />
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</p:dialog>
+			
+			<p:dialog id="onOffEstrategias" widgetVar="onOffModalEstrategias"
+				header="#{(funOperativeMB.estrategiaOnOff.estatus == 'ACTIVO') ? 'Desactivar' : 'Activar' } Estrategias #{funOperativeMB.estrategiaOnOff.estrategia}"
+				minHeight="50" width="600" showEffect="clip" hideEffect="clip"
+				modal="true">
+
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaActEstrategia"
+								value="¿Desea #{(funOperativeMB.estrategiaOnOff.estatus == 'ACTIVO') ? 'Desactivar' : 'Activar' } la estrategia ''#{funOperativeMB.estrategiaOnOff.estrategia}''?"
+								style="font-size: 20px;" />
+						</div>
+					</div>
+				</div>
+				<br/>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+						
+							<p:commandButton id="btnActivaEstrategia"
+								icon="pi pi-check"
+								oncomplete="PF('onOffModalEstrategias').show()"
+								value="Activar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.ActivaEstrategia}"
+								rendered="#{funOperativeMB.estrategiaOnOff.estatus == 'INACTIVO'}"
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+							
+							<p:commandButton id="btnDesActivaEstrategia"
+								icon="pi pi-check"
+								oncomplete="PF('onOffModalEstrategias').show()"
+								value="Desactivar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.DesactivaEstrategia}" 
+								rendered="#{funOperativeMB.estrategiaOnOff.estatus == 'ACTIVO'}"
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+							
+						</div>
+						<div class="col-4">
+							<p:commandButton value="Cancelar" icon="pi pi-times"
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+								onclick="PF('onOffModalEstrategias').hide()" />
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<p:dialog widgetVar="verResponsables" modal="true" showEffect="clip" resizable="false" header="Ingresar responsables">
+				<p:panelGrid columns="2">
+					<p:outputLabel id="lblNomenclatura" value="Nomenclatura:" styleClass="width-complete" />
+					<p:inputText id="inNomenclatura" placeholder=" Nomenclatura " styleClass="width-complete" value="#{funOperativeMB.newResponsable.nomenclatura}" autocomplete="off"/>
+
+					<p:outputLabel id="lblArea" value="Área:" styleClass="width-complete" />
+					<p:inputTextarea id="inArea" placeholder=" Área " styleClass="width-complete" value="#{funOperativeMB.newResponsable.area}" autocomplete="off"/>
+
+					<p:outputLabel id="lblResponsable" value="Responsable:" styleClass="width-complete" />
+					<p:inputText id="inResponsable" placeholder=" Responsable " styleClass="width-complete" value="#{funOperativeMB.newResponsable.responsable}" autocomplete="off"/>
+
+					<p:column />
+					
+					<p:commandButton id="btnAddResponsable"
+						value="Guardar Responsables"
+						styleClass="ui-button-raised button-170-px" ajax="false"
+						icon="pi pi-save"
+						actionListener="#{funOperativeMB.GuardarResponsable}"
+						update="pnlCatalogos"
+						oncomplete="PF('verResponsables').hide();" 
+						process="@all" />
+				</p:panelGrid>
+			</p:dialog>
+			
+			<p:dialog id="updateResponsables" widgetVar="verResponsablesUpdate"
+				header="Actualizar Responsables" minHeight="40" width="800" showEffect="clip" hideEffect="clip" modal="true">
+
+				<h:panelGroup id="ResponsablesUpdate">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">
+								<p:outputLabel id="lblNomclaturaUpdate" value="Nomenclatura:" styleClass="width-complete" />
+								<p:inputText id="inNomenclaturaUpdate" placeholder="Nomenclatura" styleClass="width-complete" 
+									value="#{funOperativeMB.responsableUpdate.nomenclatura}" autocomplete="off" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<p:outputLabel id="lblAreaUpdate" value="Area:" styleClass="width-complete" />
+								<p:inputTextarea id="inAreaUpdate" placeholder="Area" styleClass="width-complete" 
+									value="#{funOperativeMB.responsableUpdate.area}" autocomplete="off" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								<p:outputLabel id="lblResponsableUpdate" value="Responsable:" styleClass="width-complete" />
+								<p:inputText id="inResponsableUpdate" placeholder="Responsable" styleClass="width-complete" 
+									value="#{funOperativeMB.responsableUpdate.responsable}" autocomplete="off" />
+							</div>
+						</div>
+					</div>
+					<br />
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton id="btnCerrarResponsablesModal"
+									icon="pi pi-check"
+									oncomplete="PF('verResponsablesUpdate').show()"
+									value="Guardar" 
+									ajax="false"
+									styleClass="ui-button-raised"
+									actionListener="#{funOperativeMB.UpdateResponsable}" 
+									update=""
+									process="@all">
+								</p:commandButton>
+							</div>
+							<div class="col-4">
+								<p:commandButton value="Cancelar" 
+									icon="pi pi-times"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+									onclick="PF('verResponsablesUpdate').hide()" />
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</p:dialog>
+			
+<!-- 			- -->
+			
+			<p:dialog id="diaOnOffResponsables" widgetVar="verOnOffResponsable" 
+				header="#{(funOperativeMB.responsableOnOff.estatus == 'ACTIVO') ? 'Desactivar' : 'Activar' } Responsable #{funOperativeMB.responsableOnOff.nomenclatura}" 
+				minHeight="50" width="500" showEffect="clip" hideEffect="clip" modal="true">
+
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaResponsable"
+								value="¿Desea #{(funOperativeMB.responsableOnOff.estatus == 'ACTIVO') ? 'desactivar' : 'activar' } el responsable ''#{funOperativeMB.responsableOnOff.nomenclatura}''?"
+								style="font-size: 20px;" />
+						</div>
+					</div>
+				</div>
+				<br/>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+						
+							<p:commandButton id="btnActivaResponsables"
+								icon="pi pi-check"
+								oncomplete="PF('verOnOffResponsable').show()"
+								value="Activar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.ActivaResponsable}"
+								rendered="#{funOperativeMB.responsableOnOff.estatus == 'INACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+							<p:commandButton id="btnDesactivaResponsables"
+								icon="pi pi-check"
+								oncomplete="PF('verOnOffResponsable').show()"
+								value="Desactivar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.DesActivaResponsable}"
+								rendered="#{funOperativeMB.responsableOnOff.estatus == 'ACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+							
+						</div>
+						<div class="col-4">
+							<p:commandButton value="Cancelar" icon="pi pi-times"
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+								onclick="PF('verOnOffResponsable').hide()" />
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<!--  -->
+			
+			<p:dialog id="dialogNewAmbiente" widgetVar="verAmbiente" modal="true" showEffect="clip" resizable="false" header="Ingresar nuevo Ambiente"
+					minHeight="40" width="400" >
+				
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12">				
+							<p:outputLabel value="Nuevo Ambiente"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">						
+							<p:inputText value="#{funOperativeMB.tipoAmbienteNew}" styleClass="width-complete" />
+						</div>
+					</div>
+				</div>
+				<br/>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+							<p:commandButton 
+								value="Guardar"
+								ajax="false"
+								styleClass="ui-button-raised"
+								oncomplete="PF('verOnOffResponsable').show()"
+								actionListener="#{funOperativeMB.RegistraNewTipoAmbiente}"
+								update="pnlCatalogos"
+								process="@all"
+								/>
+						</div>
+						<div class="col-4">
+							<p:commandButton value="Cancelar"
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+								onclick="PF('verAmbiente').hide()" />
+						</div>
+					</div>
+				</div>
+							
+			</p:dialog>
+			
+			<p:dialog id="updateTipoAmbiente" widgetVar="verUpdateTipoAmbiente"
+				header="Actualizar Ambiente ''#{funOperativeMB.tipoAmbienteUpdate.tipoAmbiente}''" 
+				minHeight="40" width="500" showEffect="clip" hideEffect="clip" modal="true">
+
+				<h:panelGroup id="TipoAmbienteUpdate">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">
+								<p:outputLabel id="lblNomAmbiente" value="Ambiente:" styleClass="width-complete" />
+								<p:inputText id="inNomAmbiente" placeholder="Ambiente" styleClass="width-complete" 
+									value="#{funOperativeMB.tipoAmbienteUpdate.tipoAmbiente}" autocomplete="off" />
+							</div>
+						</div>
+					</div>
+					<br />
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton id="btnUpdateTipoAmbientesModal"
+									icon="pi pi-check"
+									oncomplete="PF('verUpdateTipoAmbiente').show()"
+									value="Guardar" 
+									ajax="false"
+									styleClass="ui-button-raised"
+									actionListener="#{funOperativeMB.UpdateTipoAmbiente}" 
+									update="pnlCatalogos"
+									process="@all">
+								</p:commandButton>
+							</div>
+							<div class="col-4">
+								<p:commandButton value="Cancelar" 
+									icon="pi pi-times"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+									onclick="PF('verUpdateTipoAmbiente').hide()" />
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</p:dialog>
+			
+			<p:dialog id="diaOnOffTipoAmbiente" widgetVar="verOnOffTipoAmbiente" 
+				header="#{(funOperativeMB.tipoAmbienteOnOff.estatus == 'ACTIVO') ? 'Desactivar' : 'Activar' } Ambiente: #{funOperativeMB.tipoAmbienteOnOff.tipoAmbiente}" 
+				minHeight="50" width="500" showEffect="clip" hideEffect="clip" modal="true">
+				
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaAmbiente"
+								value="¿Desea #{(funOperativeMB.tipoAmbienteOnOff.estatus == 'ACTIVO') ? 'desactivar' : 'activar' } el ambiente ''#{funOperativeMB.tipoAmbienteOnOff.tipoAmbiente}''?"
+								style="font-size: 20px;" />
+						</div>
+					</div>
+				</div>
+				<br/>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+						
+							<p:commandButton id="btnActivaAmbiente"
+								icon="pi pi-check"
+								oncomplete="PF('verOnOffTipoAmbiente').show()"
+								value="Activar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.ActivaTipoAmbiente}"
+								rendered="#{funOperativeMB.tipoAmbienteOnOff.estatus == 'INACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+							<p:commandButton id="btnDesactivaAmbiente"
+								icon="pi pi-check"
+								oncomplete="PF('verOnOffTipoAmbiente').show()"
+								value="Desactivar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.DesActivaTipoAmbiente}"
+								rendered="#{funOperativeMB.tipoAmbienteOnOff.estatus == 'ACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+						</div>
+						<div class="col-4">
+							<p:commandButton value="Cancelar" icon="pi pi-times"
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+								onclick="PF('verOnOffTipoAmbiente').hide()" />
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<!-- 			 -->
+			
+			<p:dialog id="dialogNewDireccion" widgetVar="verDireccionNueva" modal="true" showEffect="clip" resizable="false" header="Ingresar nueva Dirección"
+					minHeight="40" width="400" >
+					
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">				
+								<p:outputLabel value="Nueva Dirección"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">						
+								<p:inputText value="#{funOperativeMB.newDireccion}" styleClass="width-complete" />
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton 
+									value="Guardar"
+									ajax="false"
+									styleClass="ui-button-raised"
+									oncomplete="PF('verDireccionNueva').show()"
+									actionListener="#{funOperativeMB.registraNuevaDireccion}"
+									update="pnlCatalogos"
+									process="@all"
+									/>
+							</div>
+							<div class="col-4">
+								<p:commandButton value="Cancelar"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+									onclick="PF('verDireccionNueva').hide()" />
+							</div>
+						</div>
+					</div>
+			</p:dialog>
+			
+			<p:dialog id="dialogUpdateDireccion" widgetVar="verUpdateDireccion"
+				header="Actualizar Dirección ''#{funOperativeMB.direccionUpdate.direccion}'' " 
+				minHeight="40" width="550" showEffect="clip" hideEffect="clip" modal="true">
+				
+				<div class="container">
+						<div class="row">
+							<div class="col-sm-12">				
+								<p:outputLabel value="Dirección"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">						
+								<p:inputText value="#{funOperativeMB.direccionUpdate.direccion}" styleClass="width-complete" />
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton 
+									value="Guardar"
+									ajax="false"
+									styleClass="ui-button-raised"
+									oncomplete="PF('verUpdateDireccion').show()"
+									actionListener="#{funOperativeMB.updateDireccionBySelected}"
+									update="pnlCatalogos"
+									process="@all"
+									/>
+							</div>
+							<div class="col-4">
+								<p:commandButton value="Cancelar"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+									onclick="PF('verUpdateDireccion').hide()" />
+							</div>
+						</div>
+					</div>
+			</p:dialog>
+			
+			<p:dialog id="diaOnOffDireccion" widgetVar="verOnOffDireccion" 
+				header="#{(funOperativeMB.direccionOnOff.estatus == 'ACTIVO') ? 'Desactivar' : 'Activar' } Dirección #{funOperativeMB.direccionOnOff.direccion}" 
+				minHeight="50" width="500" showEffect="clip" hideEffect="clip" modal="true">
+				
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaDireccion"
+								value="¿Desea #{(funOperativeMB.direccionOnOff.estatus == 'ACTIVO') ? 'desactivar' : 'activar' } el ambiente ''#{funOperativeMB.direccionOnOff.direccion}''?"
+								style="font-size: 20px;" />
+						</div>
+					</div>
+				</div>
+				<br/>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+						
+							<p:commandButton id="btnActivaDireccion"
+								icon="pi pi-check"
+								oncomplete="PF('verOnOffDireccion').show()"
+								value="Activar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.activaDireccion}"
+								rendered="#{funOperativeMB.direccionOnOff.estatus == 'INACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+							<p:commandButton id="btnDesactivaDireccion"
+								icon="pi pi-check"
+								oncomplete="PF('verOnOffDireccion').show()"
+								value="Desactivar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.desactivaDireccion}"
+								rendered="#{funOperativeMB.direccionOnOff.estatus == 'ACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+						</div>
+						<div class="col-4">
+							<p:commandButton value="Cancelar" icon="pi pi-times"
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+								onclick="PF('verOnOffDireccion').hide()" />
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<!-- 			- -->
+			
+			<p:dialog id="dialogNewGerencia" widgetVar="verGerenciaNueva" modal="true" showEffect="clip" 
+					hideEffect="clip" resizable="false" header="Ingresar nueva gerencia"
+					minHeight="40" width="400" >
+					
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">				
+								<p:outputLabel value="Nueva Gerencia"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">						
+								<p:inputText value="#{funOperativeMB.newGerencia}" styleClass="width-complete">
+									<p:ajax event="keyup" update="slcOneDireccion"/>
+								</p:inputText>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">				
+								<p:outputLabel value="Dirección a la que pertenecerá*"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								
+								<p:selectOneMenu id="slcOneDireccion" value="#{funOperativeMB.idDireccion}" styleClass="width-complete"
+									disabled="#{funOperativeMB.newGerencia == '' }">
+									<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+									<f:selectItems value="#{funOperativeMB.listDirecciones}" var="direccion" 
+										itemLabel="#{direccion.direccion}" itemValue="#{direccion.idDireccion}" />
+									<p:ajax update="btnGuardaNvaGerencia"/>
+								</p:selectOneMenu>
+								
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton 
+									id="btnGuardaNvaGerencia"
+									value="Guardar"
+									ajax="false"
+									styleClass="ui-button-raised"
+									oncomplete="PF('verGerenciaNueva').show()"
+									actionListener="#{funOperativeMB.guardaNvaGerencia}"
+									disabled="#{funOperativeMB.idDireccion == 0}"
+									update="pnlCatalogos"
+									process="@all"
+									/>
+							</div>
+							<div class="col-4">
+								<p:commandButton 
+									id="btnClaNvaGerencia"
+									value="Cancelar"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+									onclick="PF('verGerenciaNueva').hide()" />
+							</div>
+						</div>
+					</div>
+			</p:dialog>
+			
+			<p:dialog id="dialogUpdateGerencia" widgetVar="verUpdateGerencia" modal="true" showEffect="clip" 
+					hideEffect="clip" resizable="false" header="Editar gerencia #{funOperativeMB.gerenciaUpdate.gerencia}"
+					minHeight="40" width="600" >
+					
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-12">				
+								<p:outputLabel value="Gerencia"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">						
+								<p:inputText value="#{funOperativeMB.gerenciaUpdate.gerencia}" styleClass="width-complete">
+									<p:ajax event="keyup" update="slcOneDireccionUpdate"/>
+								</p:inputText>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">				
+								<p:outputLabel value="Dirección a la que pertenece"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12">
+								
+								<p:selectOneMenu id="slcOneDireccionUpdate" value="#{funOperativeMB.gerenciaUpdate.direccion.idDireccion}" styleClass="width-complete"
+									disabled="#{funOperativeMB.gerenciaUpdate.gerencia == null or funOperativeMB.gerenciaUpdate.gerencia == ''}">
+									<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+									<f:selectItems value="#{funOperativeMB.listDirecciones}" var="direccion" 
+										itemLabel="#{direccion.direccion}" itemValue="#{direccion.idDireccion}" />
+									<p:ajax update="btnGuardaNvaGerencia"/>
+								</p:selectOneMenu>
+								
+							</div>
+						</div>
+					</div>
+					<br/>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton 
+									id="btnActualizaGerencia"
+									value="Guardar"
+									ajax="false"
+									styleClass="ui-button-raised"
+									oncomplete="PF('verUpdateGerencia').show()"
+									actionListener="#{funOperativeMB.updateGerenciaBySelected}"
+									disabled="#{funOperativeMB.gerenciaUpdate.direccion.idDireccion == 0}"
+									update="pnlCatalogos"
+									process="@all"
+									/>
+							</div>
+							<div class="col-4">
+								<p:commandButton 
+									id="btnCancelaUpdateGerencia"
+									value="Cancelar"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+									onclick="PF('verUpdateGerencia').hide()" />
+							</div>
+						</div>
+					</div>
+			</p:dialog>
+			
+			<p:dialog id="diaOnOffGerente" widgetVar="verOnOffGerencia" 
+				header="#{(funOperativeMB.gerenciaOnOff.estatus == 'ACTIVO') ? 'Desactivar' : 'Activar' } Ambiente: #{funOperativeMB.gerenciaOnOff.gerencia}" 
+				minHeight="50" width="700" showEffect="clip" hideEffect="clip" modal="true">
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaGerente"
+								value="¿Desea #{(funOperativeMB.gerenciaOnOff.estatus == 'ACTIVO') ? 'desactivar' : 'activar' } el ambiente ''#{funOperativeMB.gerenciaOnOff.gerencia}''?"
+								style="font-size: 20px;" />
+						</div>
+					</div>
+				</div>
+				<br/>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+						
+							<p:commandButton id="btnActivaGerencia"
+								icon="pi pi-check"
+								oncomplete="PF('verOnOffGerencia').show()"
+								value="Activar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.activaGerencia}"
+								rendered="#{funOperativeMB.gerenciaOnOff.estatus == 'INACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+							<p:commandButton id="btnDesactivaGerencia"
+								icon="pi pi-check"
+								oncomplete="PF('verOnOffGerencia').show()"
+								value="Desactivar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.desactivaGerencia}"
+								rendered="#{funOperativeMB.gerenciaOnOff.estatus == 'ACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+						</div>
+						<div class="col-4">
+							<p:commandButton value="Cancelar" icon="pi pi-times"
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+								onclick="PF('verOnOffGerencia').hide()" />
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+	
+			<p:dialog id="newUser" widgetVar="nuevoUsuario" modal="true" resizable="false" header="Nuevo usuario" showEffect="fade" hideEffect="fade" >
+				<div class="container pad-top-1">
+					<div class="row ">
+						<div class="col-sm-4">
+							<p:outputLabel id="lbNombre" value="Nombre:" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioFO.nombre}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbPrimerApellido" value="Primer Apellido" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioFO.primerApellido}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbSegundoApellido" value="Segundo Apellido" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioFO.segundoApellido}"/>
+						</div>
+					</div>
+					<div class="row ">
+						<div class="col-sm-4">
+							<p:outputLabel id="lbNombreUsuario" value="Usuario Universal" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioFO.nombreUsuario}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbCorreo" value="Correo" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioFO.correo}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbLider" value="Lider" styleClass="width-complete"/>					
+							<p:selectOneMenu id="slcOneLider"  value="#{funOperativeMB.usuarioFO.lider.idUsuario}" styleClass="width-complete">
+								<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+								<f:selectItems value="#{funOperativeMB.listUsuarios}" var="lider" 
+									itemLabel="#{lider.nombre} #{lider.primerApellido} #{lider.segundoApellido}" itemValue="#{lider.idUsuario}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+				<div class="container pad-top-1">
+					<div class="row ">
+						<h2><p:outputLabel id="lbPermisos" value="Permiso a módulos" styleClass="width-complete" /></h2>
+					</div>
+				</div>
+				<div class="container pad-top-1">
+					<div class="row ">
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioFO.permisos.registros}" itemLabel="Registros" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioFO.permisos.asignacion}" itemLabel="Asignación" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioFO.permisos.infraestructura}" itemLabel="Infraestructura" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioFO.permisos.seguimiento}" itemLabel="Seguimiento" styleClass="width-complete"/>					
+						</div>
+					</div>
+					<div class="row ">
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioFO.permisos.funcionesOperativas}" itemLabel="Funciones Operativas" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioFO.permisos.reportes}" itemLabel="Reportes" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioFO.permisos.seguimientoGrl}" itemLabel="Seguimiento General" styleClass="width-complete"/>					
+						</div>
+					</div>
+				</div>
+				
+				<div class="container padding-2">
+					<div class="row ">
+						<div class="col-sm-12 text-center">
+							<p:commandButton value="Guardar" styleClass="button-20 ui-button-raised" actionListener="#{funOperativeMB.guardaUsuarioNuevo}" 
+							update="pnlCatalogos"/>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+	
+			<p:dialog id="updateUser" widgetVar="actualizaUsuario" modal="true" resizable="false" header="Actualiza usuario #{funOperativeMB.usuarioUpdate.nombre} #{funOperativeMB.usuarioUpdate.primerApellido} #{funOperativeMB.usuarioUpdate.segundoApellido}" showEffect="fade" hideEffect="fade" >
+				<div class="container pad-top-1">
+					<div class="row ">
+						<div class="col-sm-4">
+							<p:outputLabel id="lbNombreUpdate" value="Nombre:" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioUpdate.nombre}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbPrimerApellidoUpdate" value="Primer Apellido" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioUpdate.primerApellido}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbSegundoApellidoUpdate" value="Segundo Apellido" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioUpdate.segundoApellido}"/>
+						</div>
+					</div>
+					<div class="row ">
+						<div class="col-sm-4">
+							<p:outputLabel id="lbNombreUsuarioUpdate" value="Usuario Universal" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioUpdate.nombreUsuario}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbCorreoUpdate" value="Correo" styleClass="width-complete"/>
+							<p:inputText styleClass="width-complete" value="#{funOperativeMB.usuarioUpdate.correo}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbLiderUpdate" value="Lider" styleClass="width-complete"/>					
+							<p:selectOneMenu id="slcOneLiderUpdate"  value="#{funOperativeMB.usuarioUpdate.lider.idUsuario}" styleClass="width-complete">
+								<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+								<f:selectItems value="#{funOperativeMB.listUsuarios}" var="lider" 
+									itemLabel="#{lider.nombre} #{lider.primerApellido} #{lider.segundoApellido}" itemValue="#{lider.idUsuario}" />
+							</p:selectOneMenu>
+						</div>
+					</div>
+				</div>
+				<div class="container pad-top-1">
+					<div class="row ">
+						<h2><p:outputLabel id="lbPermisosUpdate" value="Permiso a módulos" styleClass="width-complete" /></h2>
+					</div>
+				</div>
+				<div class="container pad-top-1">
+					<div class="row ">
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioUpdate.permisos.registros}" itemLabel="Registros" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioUpdate.permisos.asignacion}" itemLabel="Asignación" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioUpdate.permisos.infraestructura}" itemLabel="Infraestructura" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioUpdate.permisos.seguimiento}" itemLabel="Seguimiento" styleClass="width-complete"/>					
+						</div>
+					</div>
+					<div class="row ">
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioUpdate.permisos.funcionesOperativas}" itemLabel="Funciones Operativas" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioUpdate.permisos.reportes}" itemLabel="Reportes" styleClass="width-complete"/>					
+						</div>
+						<div class="col-sm-3">
+							 <p:selectBooleanCheckbox value="#{funOperativeMB.usuarioUpdate.permisos.seguimientoGrl}" itemLabel="Seguimiento General" styleClass="width-complete"/>					
+						</div>
+					</div>
+				</div>
+				
+				<div class="container padding-2">
+					<div class="row ">
+						<div class="col-sm-12 text-center">
+							<p:commandButton value="Guardar" styleClass="button-20 ui-button-raised" actionListener="#{funOperativeMB.actualizaUsuarioNuevo}" 
+							update="pnlCatalogos"/>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<p:dialog id="usuarioOnOff" widgetVar="verUsuarioOnOff" 
+				header="#{(funOperativeMB.usuarioOnOff.estatus == 'ACTIVO') ? 'Desactivar' : 'Activar' } a #{funOperativeMB.usuarioOnOff.nombre} #{funOperativeMB.usuarioOnOff.primerApellido} #{funOperativeMB.usuarioOnOff.segundoApellido}" 
+				minHeight="50" width="700" showEffect="clip" hideEffect="clip" modal="true">
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaUsuario"
+								value="¿Desea #{(funOperativeMB.usuarioOnOff.estatus == 'ACTIVO') ? 'desactivar' : 'activar' } el usuario ''#{funOperativeMB.usuarioOnOff.nombre} #{funOperativeMB.usuarioOnOff.primerApellido} #{funOperativeMB.usuarioOnOff.segundoApellido}''?"
+								style="font-size: 20px;" />
+						</div>
+					</div>
+				</div>
+				<br/>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+						
+							<p:commandButton id="btnActivaUsuario"
+								icon="pi pi-check"
+								oncomplete="PF('verUsuarioOnOff').show()"
+								value="Activar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.activaUsuario}"
+								rendered="#{funOperativeMB.usuarioOnOff.estatus == 'INACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+							<p:commandButton id="btnDesactivaUsuario"
+								icon="pi pi-check"
+								oncomplete="PF('verUsuarioOnOff').show()"
+								value="Desactivar" ajax="false"
+								styleClass="ui-button-raised"
+								actionListener="#{funOperativeMB.desactivaUsuario}"
+								rendered="#{funOperativeMB.usuarioOnOff.estatus == 'ACTIVO'}" 
+								update="pnlCatalogos"
+								process="@all">
+							</p:commandButton>
+						
+						</div>
+						<div class="col-4">
+							<p:commandButton value="Cancelar" icon="pi pi-times"
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger"
+								onclick="PF('verUsuarioOnOff').hide()" />
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

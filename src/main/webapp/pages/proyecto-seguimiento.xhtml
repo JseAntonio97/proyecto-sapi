@@ -1,0 +1,1117 @@
+<ui:composition xmlns	=	"http://www.w3.org/1999/xhtml"
+		xmlns:ui=	"http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h	=	"http://xmlns.jcp.org/jsf/html"
+		xmlns:f	=	"http://xmlns.jcp.org/jsf/core"
+    	xmlns:p	=	"http://primefaces.org/ui"
+		template = "../template/template.xhtml">
+	<ui:define name = "contenido">
+	
+		<h:panelGroup id="pnlMsgSucc" rendered="#{proyectoSegMB.msgSuccess != ''}">
+			<div class="container pad-top-1">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="alert alert-success alert-dismissible">
+					    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+					    	<strong style="font-size: 15px;"> &#10003; </strong> - <h:outputLabel id="lbSatisfacorio" value="#{proyectoSegMB.msgSuccess}"/>
+					  	</div>
+					</div>								
+				</div>
+			</div>
+		</h:panelGroup>
+		
+		<h:panelGroup id="pnlMsgErr" rendered="#{proyectoSegMB.msgError != ''}">
+	   		<div class="container pad-top-1" >
+				<div class="row">
+					<div class="col-12">
+					  	<div class="alert alert-danger alert-dismissible">
+					    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+						    <strong>Atención</strong> - <p:outputLabel value = "#{proyectoSegMB.msgError}"/>
+						</div>
+					</div>								
+				</div>
+			</div>
+		</h:panelGroup>
+		
+		<div class="container">
+			<H3>Seguimiento del proyecto <h:outputLabel value="''#{proyectoSegMB.proyectoSeguimiento.nombreProyecto}''"/></H3>
+		</div>
+		<div class="container">
+			<p:outputLabel value="Información del proyecto ''#{proyectoSegMB.proyectoSeguimiento.nombreProyecto}''"/>
+			<h:panelGroup id="redirectIssues" rendered="#{proyectoSegMB.incidente.estatus == 'ACTIVO'}">
+				<a href="#div_Incidentes" class="ui-button ui-button-warning ui-button-raised back padding-7-px">Cuenta con un incidente activo</a>
+			</h:panelGroup>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<hr/>
+				</div>
+			</div>
+		</div>
+		
+		<h:panelGroup id="panelDetalles">
+			
+			<div class="container">
+				<div class="row">
+				
+					<div class="col-sm-3 padding-1">
+						<div class="col pad-top-1 bck-color-blue shadow-sapi height-100">
+							<div class="row">
+								<div class="col-sm-12 text-center">
+									<p:outputLabel value="Nombre del Proyecto"/>
+								</div>
+								<div class="col-sm-12 text-center">
+									<p:outputLabel styleClass="margin-4" value="#{proyectoSegMB.proyectoSeguimiento.nombreProyecto}"/>
+								</div>
+							</div>							
+						</div>
+					</div>
+					
+					<div class="col-sm-3 padding-1">
+						<div class="col pad-top-1 bck-color-blue shadow-sapi height-100">
+							<div class="row">
+								<div class="col-sm-12 text-center">
+									<p:outputLabel value="Descripción"/>
+								</div>
+								<div class="col-sm-12 text-center">
+									<p:outputLabel styleClass="" value="#{proyectoSegMB.proyectoSeguimiento.descripcion}"/>
+								</div>
+							</div>							
+						</div>
+					</div>
+					
+					<div class="col-sm-3 padding-1">
+						<div class="col pad-top-1 bck-color-blue shadow-sapi height-100">
+							<div class="row">
+								<div class="col-sm-12 text-center">
+									<p:outputLabel value="Gerencia"/>
+								</div>
+								<div class="col-sm-12 text-center">
+									<p:outputLabel styleClass="padding-5" value="#{proyectoSegMB.proyectoSeguimiento.gerenciaDto.gerencia}"/>
+								</div>
+							</div>				
+						</div>
+					</div>
+					
+					<div class="col-sm-3 padding-1">
+						<div class="col pad-top-1 bck-color-blue shadow-sapi height-100">
+							<div class="row">
+								<div class="col-sm-12 text-center">
+									<p:outputLabel value="Solicitante"/>
+								</div>
+								<div class="col-sm-12 text-center">
+									<p:outputLabel styleClass="padding-5" value="#{proyectoSegMB.proyectoSeguimiento.solicitante}"/>
+								</div>
+							</div>							
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</h:panelGroup>
+		
+		<h:panelGroup id="panelInfomacion">			
+			<div class="container height-20">
+				<div class="row">
+				
+					<h:panelGroup rendered="#{proyectoSegMB.proyectoSeguimiento.portafolioEmp.idSeguimiento != ''}">
+						<div class="col-sm-6 padding-1">
+							<div class="encabezado-div shadow-sapi-top #{(proyectoSegMB.proyectoSeguimiento.faseSiguiente == 'Portafolio Empresarial') ? 'bck-green' : 'bck-blue' } ">
+								<div class="text-center" style="padding: 0.5rem;">
+									<p:outputLabel value="Portafolio Empresarial"/>
+								</div>
+							</div>
+							<div class="cuerpo-div shadow-sapi height-89">
+								<div class="container padding-12-px">						
+									<div class="row padding-12-px">
+										<div class="col-6">
+											<p:outputLabel styleClass="font-weight-500 width-200" value="Aplica"/>
+											<p:outputLabel styleClass="width-200" value="#{proyectoSegMB.proyectoSeguimiento.portafolioEmp.aplica}"/>
+										</div>
+										<div class="col-6">
+											<p:outputLabel styleClass="font-weight-500 width-200" value="Folio"/>
+											<p:outputLabel styleClass="width-200" value="#{proyectoSegMB.proyectoSeguimiento.portafolioEmp.folio}"/>
+										</div>
+									</div>		
+									<div class="row padding-12-px">
+										<div class="col-6">
+											<p:outputLabel styleClass="font-weight-500 width-200" value="Entrada"/>
+											<p:outputLabel styleClass="width-200" value="#{proyectoSegMB.proyectoSeguimiento.portafolioEmp.entrada}"/>
+										</div>
+										<div class="col-6">
+											<p:outputLabel styleClass="font-weight-500 width-200" value="Salida"/>
+											<p:outputLabel styleClass="width-200" value="#{proyectoSegMB.proyectoSeguimiento.portafolioEmp.salida}"/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<div class="col-sm-6 padding-1">
+						<div class="encabezado-div shadow-sapi-top #{(proyectoSegMB.proyectoSeguimiento.faseSiguiente == 'F60') ? 'bck-green' : 'bck-blue' } ">
+							<div class="text-center" style="padding: 0.5rem;">
+								<p:outputLabel value="F60"/>
+							</div>
+						</div>
+						<div class="cuerpo-div shadow-sapi height-89">
+							<div class="container ">
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Tipo F60*"/>	
+										<p:selectOneMenu id="TipoF60" value="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.tipoF60.idTipoF60}" styleClass="width-complete" style="min-width: 100% !important"
+											disabled="#{ (proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO' or proyectoSegMB.fechaInicioF60 != null) 
+																and (proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO')}">
+											<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+											<f:selectItems value="#{proyectoSegMB.listTiposF60}" var="tipoF60" 
+												itemLabel="#{tipoF60.tipoF60}" itemValue="#{tipoF60.idTipoF60}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Jefes*"/>	
+										<p:selectOneMenu id="Jefes" value="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.jefeF60.idJefeF60}" styleClass="width-complete" style="min-width: 100% !important"
+											disabled="#{ (proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO' or proyectoSegMB.fechaInicioF60 != null) 
+																and (proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO')}">
+											<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+											<f:selectItems value="#{proyectoSegMB.listJefesF60}" var="jefesF60" 
+												itemLabel="#{jefesF60.nombre}" itemValue="#{jefesF60.idJefeF60}" />
+										</p:selectOneMenu>
+									</div>
+									<div class="col-12">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Responsable*"/>	
+										<p:inputText styleClass="width-complete" value="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.responsable}" 
+											readonly="#{ (proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO' or proyectoSegMB.fechaInicioF60 != null) 
+																and (proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO')}"/>
+									</div>
+								</div>			
+								<h:panelGroup id="FechasF60Inicio" class="row">
+										<div class="col-6">
+											<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+											<p:calendar id="inFecInicioF60" navigator="true" required="false" styleClass="input-form"
+												pattern="yyyy-mm-dd" locale="es" value="#{proyectoSegMB.fechaInicioF60}"  autocomplete="off"
+												readonly="#{ (proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO' or proyectoSegMB.fechaInicioF60 != null) 
+																and (proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO')}"
+												disabledWeekends="true">
+												<p:ajax event="dateSelect" listener="#{proyectoSegMB.calculaFechaCompromisoF60}" 
+													update="FechasF60Inicio"/>
+												<p:ajax event="keyup" listener="#{proyectoSegMB.calculaFechaCompromisoF60}" 
+													update="FechasF60Inicio"/>
+											</p:calendar>
+										</div>
+										<div class="col-6">
+											<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+											<p:inputText id="inFechaCompromso" readonly="true" styleClass="input-form" autocomplete="off"
+												value="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.fechaCompromiso}"/>
+										</div>
+								</h:panelGroup>		
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+										<p:calendar id="inFecFinF60" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" value="#{proyectoSegMB.fechaFinF60}"  autocomplete="off"
+											readonly="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO'}"
+											disabledWeekends="true"/>
+									</div>
+									<div class="col-6">
+										<br/>
+										<p:selectBooleanCheckbox styleClass=" " itemLabel="Cuenta con infraestructura" 
+											value="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.cuentaConInfraestructura}" 
+											disabled="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO'}">
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 text-center">
+										<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+											value="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.sinFechas}"
+											disabled="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO'}">								
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+								<h:panelGroup id="pnlButtonsF60" rendered="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus != 'TERMINADO'}">
+									<div class="row">									
+										<div class="container text-center padding-1">
+											<div class="row">					
+												<div class="col-2"></div>
+												<div class="col-4">
+													<p:commandButton 
+														id="btnGuardar" 
+														styleClass="ui-button-raised" 
+														value="Guardar" 
+														ajax="false" process="@all" 
+														update="pnlMsgSucc panelInfomacion"
+														actionListener="#{proyectoSegMB.GuardaF60}"/>			                
+												</div>
+												<div class="col-4">
+													<p:commandButton id="btnTerminarF60" 
+														disabled="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus != 'GUARDADO' or proyectoSegMB.incidente.idIncidente != 0}"
+														oncomplete="PF('verDialogTerminarF60').show()"
+														styleClass="ui-button-raised" 
+														value="Terminar">
+													</p:commandButton>
+												</div>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+					</div>
+										
+					<h:panelGroup styleClass="col-sm-6 padding-1" rendered="#{proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO' and proyectoSegMB.proyectoSeguimiento.proyectoF60.cuentaConInfraestructura != true }">
+						<div class="encabezado-div shadow-sapi-top #{(proyectoSegMB.proyectoSeguimiento.faseSiguiente == 'INFRAESTRUCTURA') ? 'bck-green' : 'bck-blue' } " >
+							<div class="text-center" style="padding: 0.5rem;">
+								<p:outputLabel value="Infraestructura"/>
+							</div>
+						</div>
+						<div class="cuerpo-div shadow-sapi height-82" style="padding-bottom: 30px;">
+							<div class="container ">
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="KickOff"/>										
+										<p:calendar id="inKickOffInfra" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" value="#{proyectoSegMB.fechaKickOffInfra}" autocomplete="off"
+											readonly="#{ (proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'TERMINADO' or proyectoSegMB.fechaKickOffInfra != null) 
+													and (proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'TERMINADO')}"
+											disabledWeekends="true">
+											<p:ajax event="dateSelect" update="panelInfomacion"/>
+										</p:calendar>
+									</div>
+									<div class="col-6 text-center">
+										<br/>
+										<p:commandButton value="Infraestructura" styleClass="ui-button-raised" actionListener="#{proyectoSegMB.addInfraestructura}"/>
+									</div>
+								</div>
+								<h:panelGroup id="fechasInfraPnl" class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+										<p:calendar id="inFecInicioInfra" navigator="true" required="false" styleClass="input-form"
+												pattern="yyyy-mm-dd" locale="es" value="#{proyectoSegMB.fechaInicioInfra}" autocomplete="off"
+												readonly="#{ (proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'TERMINADO' or proyectoSegMB.proyectoSeguimiento.seguimientoInfra.fechaEnvio != null )
+														and (proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'TERMINADO')}"
+												disabledWeekends="true">
+											 <p:ajax event="dateSelect" listener="#{proyectoSegMB.calculaFechaCompromisoInfra}" 
+												update="fechasInfraPnl"/>
+											<p:ajax event="keyup" listener="#{proyectoSegMB.calculaFechaCompromisoInfra}" 
+												update="fechasInfraPnl"/>
+										</p:calendar>
+									</div>
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+										<p:inputText readonly="true" styleClass="input-form" autocomplete="off" value="#{proyectoSegMB.proyectoSeguimiento.seguimientoInfra.fechaCompromiso}"/>
+									</div>
+								</h:panelGroup>
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+										<p:calendar id="inFecFinInfra" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" value="#{proyectoSegMB.fechaFinInfra}" autocomplete="off"
+											readonly="#{proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'TERMINADO'}"
+											disabledWeekends="true"/>
+									</div>
+									<div class="col-6">
+										<br/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 text-center">
+										<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+											value="#{proyectoSegMB.proyectoSeguimiento.seguimientoInfra.sinFechas}"
+											disabled="#{proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'TERMINADO'}">								
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+								<h:panelGroup id="pnlButtonsInfra" rendered="#{proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus != 'TERMINADO'}">
+									<div class="row">									
+										<div class="container text-center padding-2">
+											<div class="row">					
+												<div class="col-2"></div>
+												<div class="col-4">
+													<p:commandButton styleClass="ui-button-raised" value="Guardar" 
+														ajax="false" process="@all" update="pnlMsgSucc panelInfomacion"
+													 	actionListener="#{proyectoSegMB.GuardaInfraestructura}"/>			                
+												</div>
+												<div class="col-4">												
+													<p:commandButton 
+														id="btnTerminarInfra" 
+														styleClass="ui-button-raised" 
+														value="Terminar" 
+														disabled="#{proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus != 'GUARDADO' or proyectoSegMB.incidente.idIncidente != 0}"
+														oncomplete="PF('verDialogTerminarInfra').show()"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<h:panelGroup styleClass="col-sm-6 padding-1" rendered="#{ proyectoSegMB.proyectoSeguimiento.seguimientoInfra.estatus == 'TERMINADO' or ( proyectoSegMB.proyectoSeguimiento.proyectoF60.cuentaConInfraestructura == true and proyectoSegMB.proyectoSeguimiento.proyectoF60.estatus == 'TERMINADO' ) }">
+						<div class="encabezado-div shadow-sapi-top #{(proyectoSegMB.proyectoSeguimiento.faseSiguiente == 'APLICATIVO') ? 'bck-green' : 'bck-blue' } ">
+							<div class="text-center" style="padding: 0.5rem;">
+								<p:outputLabel value="Aplicativo"/>
+							</div>
+						</div>
+						<div class="cuerpo-div shadow-sapi height-82">
+							<div class="container ">						
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Despliegue"/>										
+										<p:calendar id="inFecInicioAplicativo" navigator="true" required="false" styleClass="input-form" 
+											value="#{proyectoSegMB.fechaDespliegue}"
+											pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+											readonly="#{proyectoSegMB.proyectoSeguimiento.aplicativo.estatus == 'TERMINADO'}"
+											disabledWeekends="true">
+											
+										</p:calendar>
+									</div>
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin Pruebas"/>
+										<p:calendar id="inFecFinPruebas" navigator="true" required="false" styleClass="input-form" 
+											value="#{proyectoSegMB.fechaFinPruebas}"
+											pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+											readonly="#{proyectoSegMB.proyectoSeguimiento.aplicativo.estatus == 'TERMINADO' }"
+											disabledWeekends="true">
+										</p:calendar>
+									</div>
+								</div>		
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Notificación"/>
+										<p:calendar id="inFecFinAplicativo" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" value="#{proyectoSegMB.fechaNotificacion}" autocomplete="off"
+											readonly="#{proyectoSegMB.proyectoSeguimiento.aplicativo.estatus == 'TERMINADO'}"
+											disabledWeekends="true"/>
+									</div>
+									<div class="col-6">
+										<br/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 text-center">
+										<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+											value="#{proyectoSegMB.proyectoSeguimiento.aplicativo.sinFechas}"
+											disabled="#{proyectoSegMB.proyectoSeguimiento.aplicativo.estatus == 'TERMINADO'}">								
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+								<h:panelGroup id="pnlButtonsAplicativo" rendered="#{proyectoSegMB.proyectoSeguimiento.aplicativo.estatus != 'TERMINADO'}">
+									<div class="row">									
+										<div class="container text-center padding-3">
+											<div class="row">					
+												<div class="col-2"></div>
+												<div class="col-4">
+													<p:commandButton styleClass="ui-button-raised" value="Guardar" 
+														ajax="false" process="@all" update="pnlMsgSucc panelInfomacion"
+													 	actionListener="#{proyectoSegMB.GuardaAplicativo}"/>			                
+												</div>
+												<div class="col-4">
+													<p:commandButton 
+														id="btnTerminarAplicativo" 
+														disabled="#{proyectoSegMB.proyectoSeguimiento.aplicativo.estatus != 'GUARDADO' or proyectoSegMB.incidente.idIncidente != 0}"
+														styleClass="ui-button-raised" 
+														value="Terminar"
+														oncomplete="PF('verDialogTerminarAplicativo').show()"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+								
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<h:panelGroup class="col-sm-6 padding-1" rendered="#{proyectoSegMB.proyectoSeguimiento.aplicativo.estatus == 'TERMINADO'}">
+						<div class="encabezado-div shadow-sapi-top #{(proyectoSegMB.proyectoSeguimiento.faseSiguiente == 'PREATP') ? 'bck-green' : 'bck-blue' }">
+							<div class="text-center" style="padding: 0.5rem;">
+								<p:outputLabel value="Pre ATP´s"/>
+							</div>
+						</div>
+						<div class="cuerpo-div shadow-sapi height-82">
+							<div class="container ">						
+								<h:panelGroup id="pnlFechasPreAtp" class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+										<p:calendar id="inFecInicioPreAtp" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+											readonly="#{ (proyectoSegMB.proyectoSeguimiento.preAtp.estatus == 'TERMINADO' or proyectoSegMB.fechaInicioPreAtp != null )
+													and (proyectoSegMB.proyectoSeguimiento.preAtp.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.preAtp.estatus == 'TERMINADO' )}"
+											value="#{proyectoSegMB.fechaInicioPreAtp}"
+											disabledWeekends="true">
+											<p:ajax event="dateSelect" listener="#{proyectoSegMB.calculaFechaCompromisoPreAtp}"
+												update="pnlFechasPreAtp"/>
+											<p:ajax event="keyup" listener="#{proyectoSegMB.calculaFechaCompromisoPreAtp}" 
+												update="pnlFechasPreAtp"/>
+										</p:calendar>
+									</div>
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+										<p:inputText readonly="true" styleClass="input-form" autocomplete="off"
+										value="#{proyectoSegMB.proyectoSeguimiento.preAtp.fechaCompromiso}"/>
+									</div>
+								</h:panelGroup>		
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+										<p:calendar id="inFecFinPreAtp" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" value="#{proyectoSegMB.fechaFinPreAtp}" autocomplete="off"
+											readonly="#{proyectoSegMB.proyectoSeguimiento.preAtp.estatus == 'TERMINADO'}"
+											disabledWeekends="true"/>
+									</div>
+									<div class="col-6">
+										<br/>
+										
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 text-center">
+										<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+											value="#{proyectoSegMB.proyectoSeguimiento.preAtp.sinFechas}"
+											disabled="#{proyectoSegMB.proyectoSeguimiento.preAtp.estatus == 'TERMINADO'}">								
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+								<h:panelGroup id="pnlButtonsPreAtp" rendered="#{proyectoSegMB.proyectoSeguimiento.preAtp.estatus != 'TERMINADO'}">
+									<div class="row">									
+										<div class="container text-center padding-3">
+											<div class="row">					
+												<div class="col-2"></div>
+												<div class="col-4">
+													<p:commandButton id="btnGuardarPreAtp" styleClass="ui-button-raised" value="Guardar" 
+														ajax="false" process="@all" update="pnlMsgSucc panelInfomacion"
+														actionListener="#{proyectoSegMB.GuardaPreAtp}"/>			                
+												</div>
+												<div class="col-4">
+													<p:commandButton 
+														id="btnTerminarPreAtp"
+														disabled="#{proyectoSegMB.proyectoSeguimiento.preAtp.estatus != 'GUARDADO' or proyectoSegMB.incidente.idIncidente != 0}"
+														styleClass="ui-button-raised" 
+														value="Terminar"
+														oncomplete="PF('verDialogTerminarPreAtp').show()"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<h:panelGroup class="col-sm-6 padding-1" rendered="#{proyectoSegMB.proyectoSeguimiento.preAtp.estatus == 'TERMINADO'}">
+						<div class="encabezado-div shadow-sapi-top #{(proyectoSegMB.proyectoSeguimiento.faseSiguiente == 'ATP') ? 'bck-green' : 'bck-blue' }">
+							<div class="text-center" style="padding: 0.5rem;">
+								<p:outputLabel value="ATP´s"/>
+							</div>
+						</div>
+						<div class="cuerpo-div shadow-sapi height-82">
+							<div class="container ">						
+								<h:panelGroup id="pnlFechasATP" class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+										<p:calendar id="inFecInicioAtp" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+											value="#{proyectoSegMB.fechaInicioAtp}"
+											readonly="#{ (proyectoSegMB.proyectoSeguimiento.segATP.estatus == 'TERMINADO' or proyectoSegMB.fechaInicioAtp != null) 
+													and (proyectoSegMB.proyectoSeguimiento.segATP.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.segATP.estatus == 'TERMINADO') }" 
+											disabledWeekends="true">
+											<p:ajax event="dateSelect" listener="#{proyectoSegMB.calculaFechaCompromisoAtp}"
+												update="pnlFechasATP"/>
+											<p:ajax event="keyup" listener="#{proyectoSegMB.calculaFechaCompromisoAtp}" 
+												update="pnlFechasATP"/>
+										</p:calendar>
+									</div>
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+										<p:inputText readonly="true" styleClass="input-form" autocomplete="off" value="#{proyectoSegMB.proyectoSeguimiento.segATP.fechaCompromiso}"/>
+									</div>
+								</h:panelGroup>		
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+										<p:calendar id="inFecFinAtp" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+											value="#{proyectoSegMB.fechaFinAtp}"
+											readonly="#{proyectoSegMB.proyectoSeguimiento.segATP.estatus == 'TERMINADO' }"
+											disabledWeekends="true"/>
+									</div>
+									<div class="col-6">
+										<br/>
+										
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 text-center">
+										<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+											value="#{proyectoSegMB.proyectoSeguimiento.segATP.sinFechas}"
+											disabled="#{proyectoSegMB.proyectoSeguimiento.segATP.estatus == 'TERMINADO'}">								
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+								<h:panelGroup id="pnlButtonsAtp" rendered="#{proyectoSegMB.proyectoSeguimiento.segATP.estatus != 'TERMINADO' }">
+									<div class="row">									
+										<div class="container text-center padding-3">
+											<div class="row">					
+												<div class="col-2"></div>
+												<div class="col-4">
+													<p:commandButton id="btnGuardarAtp" styleClass="ui-button-raised" value="Guardar" 
+														ajax="false" process="@all" update="pnlMsgSucc panelInfomacion"
+														actionListener="#{proyectoSegMB.GuardarAtp}"/>			                
+												</div>
+												<div class="col-4">													
+													<p:commandButton 
+														id="btnTerminarAtp"
+														disabled="#{proyectoSegMB.proyectoSeguimiento.segATP.estatus != 'GUARDADO' or proyectoSegMB.incidente.idIncidente != 0}"
+														styleClass="ui-button-raised" 
+														value="Terminar"
+														oncomplete="PF('verDialogTerminarAtp').show()"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+					<h:panelGroup id="pnlRTO" class="col-sm-6 padding-1" rendered="#{proyectoSegMB.proyectoSeguimiento.segATP.estatus == 'TERMINADO'}">
+						<div class="encabezado-div shadow-sapi-top #{(proyectoSegMB.proyectoSeguimiento.faseSiguiente == 'RTO') ? 'bck-green' : 'bck-blue' }">
+							<div class="text-center" style="padding: 0.5rem;">
+								<p:outputLabel value="RTO"/>
+							</div>
+						</div>
+						<div class="cuerpo-div shadow-sapi height-82">
+							<div class="container ">						
+								<h:panelGroup id="pnlFechasRTO" class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+										<p:calendar id="inFecInicioRto" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+											value="#{proyectoSegMB.fechaInicioRto}"
+											readonly="#{(proyectoSegMB.proyectoSeguimiento.segRTO.estatus == 'TERMINADO' or proyectoSegMB.fechaInicioRto != null) and (proyectoSegMB.proyectoSeguimiento.segRTO.estatus == 'GUARDADO' or proyectoSegMB.proyectoSeguimiento.segRTO.estatus == 'TERMINADO') }" 
+											disabledWeekends="true">
+											<p:ajax event="dateSelect" listener="#{proyectoSegMB.calculaFechaCompromisoRTO}"
+												update="pnlFechasRTO"/>
+											<p:ajax event="keyup" listener="#{proyectoSegMB.calculaFechaCompromisoRTO}" 
+												update="pnlFechasRTO"/>
+										</p:calendar>
+									</div>
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+										<p:inputText readonly="true" styleClass="input-form" autocomplete="off" value="#{proyectoSegMB.proyectoSeguimiento.segRTO.fechaCompromiso}"/>
+									</div>
+								</h:panelGroup>		
+								<div class="row">
+									<div class="col-6">
+										<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+										<p:calendar id="inFecFinRto" navigator="true" required="false" styleClass="input-form"
+											pattern="yyyy-mm-dd" locale="es" autocomplete="off" 
+											value="#{proyectoSegMB.fechaFinRto}"
+											readonly="#{proyectoSegMB.proyectoSeguimiento.segRTO.estatus == 'TERMINADO' }"
+											disabledWeekends="true"/>
+									</div>
+									<div class="col-6">
+										<br/>
+										
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-12 text-center">
+										<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+											value="#{proyectoSegMB.proyectoSeguimiento.segRTO.sinFechas}"
+											disabled="#{proyectoSegMB.proyectoSeguimiento.segRTO.estatus == 'TERMINADO'}">								
+										</p:selectBooleanCheckbox>
+									</div>
+								</div>
+								<h:panelGroup id="pnlButtonsRto" rendered="#{proyectoSegMB.proyectoSeguimiento.segRTO.estatus != 'TERMINADO' }">
+									<div class="row">									
+										<div class="container text-center padding-3">
+											<div class="row">					
+												<div class="col-2"></div>
+												<div class="col-4">
+													<p:commandButton id="btnGuardarRto" styleClass="ui-button-raised" value="Guardar" 
+														ajax="false" update="pnlMsgSucc pnlRTO"
+														actionListener="#{proyectoSegMB.GuardarRTO}"/>			                
+												</div>
+												<div class="col-4">
+																									
+													<p:commandButton 
+														id="btnTerminarRto"
+														disabled="#{proyectoSegMB.proyectoSeguimiento.segRTO.estatus != 'GUARDADO' or proyectoSegMB.incidente.idIncidente != 0}"
+														styleClass="ui-button-raised" 
+														value="Terminar"
+														oncomplete="PF('verDialogTerminarRTO').show()"/>
+												</div>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+					</h:panelGroup>
+					
+				</div>
+			</div>
+			
+			<h:panelGroup rendered="#{proyectoSegMB.incidente.estatus != 'ACTIVO' and proyectoSegMB.proyectoSeguimiento.estatus != 'TERMINADO'}">
+				<div id="pnlIncidente" class="container">			
+					<div class="row">
+						
+						<div class="col-sm-12 padding-1">
+							<div class="encabezado-div bck-blue shadow-sapi-top">
+								<div class="text-center" style="padding: 0.5rem;">
+									<p:outputLabel value="Incidente"/>
+								</div>
+							</div>
+							<div class="cuerpo-div shadow-sapi">
+								<div class="container">						
+									<div class="row">
+										<div class="col-sm-3">
+											<p:outputLabel styleClass="font-weight-500" value="Incidente"/>
+											<p:inputText styleClass="input-form" value="#{proyectoSegMB.incidenteRegistro.issueIncidente}"/>
+										</div>
+										<div class="col-sm-3">
+											<p:outputLabel styleClass="font-weight-500 width-complete" value="Responsable"/>											
+											<p:selectOneMenu id="slcResponsable" value="#{proyectoSegMB.incidenteRegistro.responsable.idResponable}" styleClass="width-complete " style="min-width: 100% !important">
+												<f:selectItem itemLabel="- Selecione -" itemValue="0"/>
+												<f:selectItems value="#{proyectoSegMB.listResponsables}" 
+													var="responsable" itemLabel="#{responsable.area}" itemValue="#{responsable.idResponable}"/>
+											</p:selectOneMenu>
+										</div>
+										<div class="col-sm-3">
+											<p:outputLabel styleClass="font-weight-500" value="Fecha Inicio"/>
+											<p:calendar id="inFecIniInci" navigator="true" required="false" styleClass="input-form"
+												pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+												value="#{proyectoSegMB.fechaIniIssue}"
+												disabledWeekends="true"/>
+										</div>
+										<div class="col-sm-3">
+											<p:outputLabel styleClass="font-weight-500" value="Etapa"/>
+											<p:inputText styleClass="input-form" maxlength="200" autocomplete="off" value="#{proyectoSegMB.proyectoSeguimiento.faseActual}" disabled="true"/>
+										</div>
+										<div class="col-sm-12">
+											<p:outputLabel styleClass="font-weight-500" value="Detalles"/>
+											<p:inputTextarea styleClass="input-form" maxlength="200" value="#{proyectoSegMB.incidenteRegistro.detalles}" />
+										</div>
+									</div>	
+									<div class="row">
+										<div class="col-sm-12 text-center padding-1">
+										<p:commandButton 
+												id="btnRegistraIncidente" 
+												value="Registrar Incidente" 
+												ajax="false"
+							                	styleClass="ui-button-raised" 
+							                	actionListener="#{proyectoSegMB.RegistrarIncidente}"
+							                	update="pnlMsgSucc pnlMsgErr redirectIssues panelInfomacion"
+							                	process="@all"/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<div id="div_Incidentes" class="container">			
+				<div class="row">		
+					<div class="col-sm-12 padding-1">
+						<div class="encabezado-div bck-blue shadow-sapi-top">
+							<div class="text-center" style="padding: 0.5rem;">
+								<p:outputLabel value="Historico de Incidencias"/>
+							</div>
+						</div>
+						<div class="cuerpo-div shadow-sapi">
+							<div class="container">						
+								<div class="row">
+									<div class="col-12">
+										<p:dataTable id="tblIncidentes" value="#{proyectoSegMB.listIncidentes}" var="rsIncidentes" styleClass="font-13" reflow="true">
+											<p:column headerText="" style="width: 110px;">
+											
+												<div class="container text-center">			
+													<div class="row">
+														<div class="col-6">												
+															<p:commandButton 
+																id="updateIssueTable" 
+																disabled="#{rsIncidentes.estatus == 'CERRADO'}"
+																oncomplete="PF('verIssueProyecto').show()"
+																styleClass="ui-button-raised" 
+																value="Actualizar">
+															</p:commandButton>
+														</div>
+													</div>
+													<div class="row padding-3">
+														<div class="col-6 text-center">
+															<p:commandButton 
+																id="closeIssueTable" 
+																disabled="#{rsIncidentes.estatus == 'CERRADO'}"
+																oncomplete="PF('verDialogCerrarIssue').show()"
+																styleClass="ui-button-raised margin-left-10" 
+																value="Cerrar">
+															</p:commandButton>
+														</div>
+													</div>
+												</div>
+												
+											</p:column>
+											<p:column headerText="Incidente">
+												<p:outputLabel value="#{rsIncidentes.issueIncidente}"/>
+											</p:column>
+											<p:column headerText="Etapa" style="width: 130px">
+												<p:outputLabel value="#{rsIncidentes.etapa}"/>
+											</p:column>
+											<p:column headerText="Responsable">
+												<p:outputLabel value="#{rsIncidentes.responsable.area}"/>
+											</p:column>
+											<p:column headerText="Fecha Inicio">
+												<p:outputLabel value="#{rsIncidentes.fechaInicio}"/>
+											</p:column>
+											<p:column headerText="Fecha Solución">
+												<p:outputLabel value="#{rsIncidentes.fechaResolucion}"/>
+											</p:column>
+											<p:column headerText="Detalles">
+												<p:outputLabel value="#{rsIncidentes.detalles}"/>
+											</p:column>
+											<p:column headerText="Estatus">
+												<p:outputLabel styleClass="customer-badge status-incidente-#{rsIncidentes.estatus}" value="#{rsIncidentes.estatus}"/>
+											</p:column>
+										</p:dataTable>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>					
+				</div>
+			</div>
+			
+			<div class="container">			
+				<div class="row">
+					
+				</div>
+			</div>
+			
+			<p:dialog id="terminarF60Dialog" widgetVar="verDialogTerminarF60" header="Terminar Proyecto F60" 
+				minHeight="40" width="350" showEffect="fade" hideEffect="fade" modal="true">
+			
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPregunta" value="¿Desea terminar el apartado F60 del proyecto ?"/>
+						</div>
+					</div>
+				</div>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+							<p:commandButton id="btnTerminarF60Modal" oncomplete="PF('verDialogTerminarF60').show()" 
+								value="Si" ajax="false"
+								icon="pi pi-check" 
+			                	actionListener="#{proyectoSegMB.TerminaF60}" 
+			                	styleClass="ui-button-raised" 
+			                	update="pnlMsgSucc panelInfomacion"
+			                	process="@all">
+			                </p:commandButton>			                
+						</div>
+						<div class="col-4">
+							<p:commandButton value="No" icon="pi pi-times" 
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+								onclick="PF('verDialogTerminarF60').hide()"/>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<p:dialog id="terminarInfraDialog" widgetVar="verDialogTerminarInfra" header="Terminar Proyecto Infraestructura" 
+				minHeight="40" width="550" showEffect="fade" hideEffect="fade" modal="true">
+			
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaInfra" value="¿Desea terminar el apartado Infraestructura del proyecto ?"/>
+						</div>
+					</div>
+				</div>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+							<p:commandButton id="btnTerminarInfraModal" oncomplete="PF('verDialogTerminarInfra').show()" 
+								value="Si" ajax="false"
+								icon="pi pi-check" 
+			                	actionListener="#{proyectoSegMB.TerminaInfraestructura}"
+			                	styleClass="ui-button-raised" 
+			                	update="pnlMsgSucc panelInfomacion"
+			                	process="@all">
+			                </p:commandButton>			                
+						</div>
+						<div class="col-4">
+							<p:commandButton value="No" icon="pi pi-times" 
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+								onclick="PF('verDialogTerminarInfra').hide()"/>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<p:dialog id="terminarAplicativoDialog" widgetVar="verDialogTerminarAplicativo" header="Terminar Aplicativo" 
+				minHeight="40" width="350" showEffect="fade" hideEffect="fade" modal="true">
+			
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaAlpicativo" value="¿Desea terminar el apartado Aplicativo del proyecto ?"/>
+						</div>
+					</div>
+				</div>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+							<p:commandButton id="btnTerminarAplicativoModal" oncomplete="PF('verDialogTerminarAplicativo').show()" 
+								value="Si" ajax="false"
+								icon="pi pi-check" 
+			                	actionListener="#{proyectoSegMB.TerminaAplicativo}" 
+			                	styleClass="ui-button-raised" 
+			                	update="pnlMsgSucc panelInfomacion"
+			                	process="@all">
+			                </p:commandButton>			                
+						</div>
+						<div class="col-4">
+							<p:commandButton value="No" icon="pi pi-times" 
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+								onclick="PF('verDialogTerminarAplicativo').hide()"/>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<p:dialog id="terminarPreAtpDialog" widgetVar="verDialogTerminarPreAtp" header="Terminar Pre ATP´s" 
+				minHeight="40" width="450" showEffect="fade" hideEffect="fade" modal="true">
+			
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaPreAtp" value="¿Desea terminar el apartado Pre ATP´s del proyecto ?"/>
+						</div>
+					</div>
+				</div>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+							<p:commandButton id="btnTerminarPreAtpModal" oncomplete="PF('verDialogTerminarPreAtp').show()" 
+								value="Si" ajax="false"
+								icon="pi pi-check" 
+			                	actionListener="#{proyectoSegMB.TerminaPreAtp}" 
+			                	styleClass="ui-button-raised" 
+			                	update="pnlMsgSucc panelInfomacion"
+			                	process="@all">
+			                </p:commandButton>			                
+						</div>
+						<div class="col-4">
+							<p:commandButton value="No" icon="pi pi-times" 
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+								onclick="PF('verDialogTerminarPreAtp').hide()"/>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<p:dialog id="terminarAtpDialog" widgetVar="verDialogTerminarAtp" header="Terminar ATP´s" 
+				minHeight="40" width="450" showEffect="fade" hideEffect="fade" modal="true">
+			
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaAtp" value="¿Desea terminar el apartado ATP´s del proyecto ?"/>
+						</div>
+					</div>
+				</div>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+							<p:commandButton id="btnTerminarAtpModal" oncomplete="PF('verDialogTerminarAtp').show()" 
+								value="Si" ajax="false"
+								icon="pi pi-check" 
+			                	actionListener="#{proyectoSegMB.TerminarAtp}" 
+			                	styleClass="ui-button-raised" 
+			                	update="pnlMsgSucc panelInfomacion"
+			                	process="@all">
+			                </p:commandButton>			                
+						</div>
+						<div class="col-4">
+							<p:commandButton value="No" icon="pi pi-times" 
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+								onclick="PF('verDialogTerminarAtp').hide()"/>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<p:dialog id="terminarRTODialog" widgetVar="verDialogTerminarRTO" header="Terminar RTO" 
+				minHeight="40" width="450" showEffect="fade" hideEffect="fade" modal="true">
+			
+				<div class="container text-center">
+					<div class="row">
+						<div class="col">
+							<p:outputLabel id="lbPreguntaRTO" value="¿Desea terminar el apartado RTO del proyecto ?"/>
+						</div>
+					</div>
+				</div>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+							<p:commandButton id="btnTerminarRTOModal" oncomplete="PF('verDialogTerminarRTO').show()" 
+								value="Si" ajax="false"
+								icon="pi pi-check" 
+			                	actionListener="#{proyectoSegMB.TerminarRTO}" 
+			                	styleClass="ui-button-raised" 
+			                	update="pnlMsgSucc pnlRTO"
+			                	process="@all">
+			                </p:commandButton>			                
+						</div>
+						<div class="col-4">
+							<p:commandButton value="No" icon="pi pi-times" 
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+								onclick="PF('verDialogTerminarRTO').hide()"/>
+						</div>
+					</div>
+				</div>
+			</p:dialog>
+			
+			<p:dialog id="updateIssue" widgetVar="verIssueProyecto" header="Actualizar Incidente" 
+				minHeight="50" width="700" showEffect="fade" hideEffect="fade" modal="true">
+				
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4">
+							<p:outputLabel styleClass="font-weight-500" value="Incidente"/>
+							<p:inputText styleClass="input-form" value="#{proyectoSegMB.incidente.issueIncidente}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel styleClass="font-weight-500" value="Responsable"/>
+							<p:selectOneMenu id="slcResponsableModal" value="#{proyectoSegMB.incidente.responsable.idResponable}" 
+								styleClass="input-form " style="min-width: 187px !important">
+								<f:selectItem itemLabel="- Selecione -" itemValue="0"/>
+								<f:selectItems value="#{proyectoSegMB.listResponsables}" 
+									var="responsable" itemLabel="#{responsable.area}" itemValue="#{responsable.idResponable}"/>
+							</p:selectOneMenu>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel styleClass="font-weight-500" value="Fecha Inicio"/>
+							<p:calendar id="inFecIniInciModal" navigator="true" required="false" styleClass="input-form"
+								pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+								value="#{proyectoSegMB.fechaInicioIncidente}" 
+								disabledWeekends="true"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<p:outputLabel styleClass="font-weight-500" value="Fecha de Solución"/>
+							<p:calendar id="inFecFinInciModal" navigator="true" required="false" styleClass="input-form"
+								pattern="yyyy-mm-dd" locale="es" autocomplete="off"
+								value="#{proyectoSegMB.fechaFinIncidente}"
+								disabledWeekends="true"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel styleClass="font-weight-500" value="Etapa"/>
+							<p:inputText styleClass="input-form" maxlength="200" value="#{proyectoSegMB.proyectoSeguimiento.faseActual}" disabled="true"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-12">
+							<p:outputLabel styleClass="font-weight-500" value="Detalles"/>
+							<p:inputTextarea styleClass="input-form" maxlength="200" value="#{proyectoSegMB.incidente.detalles}"/>
+						</div>
+					</div>
+				</div>
+				<div class="container">			
+					<div class="row">
+						<br/>
+					</div>
+				</div>
+				<div class="container text-center">
+					<div class="row">
+						<div class="col-2"></div>
+						<div class="col-4">
+							<p:commandButton id="btnGuardaUpdateIssue" oncomplete="PF('verIssueProyecto').show()" 
+								value="Guardar" ajax="false"
+								icon="pi pi-check"
+								actionListener="#{proyectoSegMB.UpdateIncidente}"
+			                	styleClass="ui-button-raised" 
+			                	update="pnlMsgSucc pnlRTO"
+			                	process="@all">
+			                </p:commandButton>			                
+						</div>
+						<div class="col-4">
+							<p:commandButton value="Cancelar" icon="pi pi-times" 
+								styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+								onclick="PF('verIssueProyecto').hide()"/>
+						</div>
+					</div>
+				</div>				
+			</p:dialog>
+				
+			<p:dialog id="dialogCerrarIssue" widgetVar="verDialogCerrarIssue" header="Cerrar el Incidente" 
+				minHeight="40" width="350" showEffect="fade" hideEffect="fade" modal="true">
+				
+				<h:panelGroup id="caseFinalDateEmpty" rendered="#{proyectoSegMB.incidente.fechaResolucion == null}">
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<p:outputLabel id="lbMgsCloseIssue" value="Para cerrar el Incidente ''#{proyectoSegMB.incidente.issueIncidente}'', debe llenar la fecha de resolución"/>
+							</div>
+						</div>
+					</div>
+					
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-12">
+								<p:commandButton value="Aceptar" 
+									icon="pi pi-check" 
+									styleClass="ui-confirmdialog-no ui-button-raised" 
+									onclick="PF('verDialogCerrarIssue').hide()"/>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+				
+				<h:panelGroup id="caseAllComplete" rendered="#{proyectoSegMB.incidente.fechaResolucion != null}">			
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<p:outputLabel id="lbPreguntaIssue" value="¿Desea cerrar el Incidente"/>
+							</div>
+						</div>
+					</div>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton id="btnCerrarIssueModal" oncomplete="PF('verDialogCerrarIssue').show()" 
+									value="Si" ajax="false"
+									icon="pi pi-check"
+				                	styleClass="ui-button-raised" 
+				                	actionListener="#{proyectoSegMB.CerrarIncidente}"
+				                	update="pnlMsgSucc pnlMsgErr redirectIssues panelInfomacion"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-4">
+								<p:commandButton value="No" icon="pi pi-times" 
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verDialogCerrarIssue').hide()"/>
+							</div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</p:dialog>
+		</h:panelGroup>
+		
+	</ui:define>
+</ui:composition>

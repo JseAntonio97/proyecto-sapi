@@ -1,0 +1,26 @@
+<ui:composition xmlns	=	"http://www.w3.org/1999/xhtml"
+		xmlns:ui=	"http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h	=	"http://xmlns.jcp.org/jsf/html"
+		xmlns:f	=	"http://xmlns.jcp.org/jsf/core"
+    	xmlns:p	=	"http://primefaces.org/ui"
+		template = "../template/template.xhtml">
+	<ui:define name = "contenido">
+		
+		<div class="container pad-top-1">
+			<div class="row">
+				<div class="col-sm d-flex justify-content-center">				
+					<h:graphicImage name="images/warning.png" width="320" height="320"/>				
+				</div>
+			</div>
+		</div>
+		
+		<div class="container pad-top-1">
+			<div class="row">
+				<div class="col-sm d-flex justify-content-center">				
+					<p:outputLabel value="No cuenta con permisos para acceder a esta página" styleClass="text-format-permiso"/>				
+				</div>
+			</div>
+		</div>
+		
+	</ui:define>	
+</ui:composition>

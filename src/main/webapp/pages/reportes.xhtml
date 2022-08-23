@@ -1,0 +1,750 @@
+<ui:composition xmlns	=	"http://www.w3.org/1999/xhtml"
+		xmlns:ui=	"http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h	=	"http://xmlns.jcp.org/jsf/html"
+		xmlns:f	=	"http://xmlns.jcp.org/jsf/core"
+    	xmlns:p	=	"http://primefaces.org/ui"
+		template = "../template/template.xhtml">
+	<ui:define name = "contenido">
+	
+		<h:panelGroup id="pnlReportes">
+			
+			<h:panelGroup id="pnlMsgErr" rendered="#{bandReporteMB.msgError != ''}">
+		   		<div class="container pad-top-1" >
+					<div class="row">
+						<div class="col-12">
+						  	<div class="alert alert-danger alert-dismissible">
+						    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+							    <strong>Atención</strong> - <p:outputLabel value = "#{bandReporteMB.msgError}"/>
+							</div>
+						</div>								
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<p:tabView id="pestanias">
+				<p:tab id="tab0" title="Reportes Generales">
+					<div class="container padding-1">
+						<H3>Reportes para el Sistema de Administración de Proyectos Internos</H3>
+					</div>
+					
+					<h:panelGroup id="pnlBusqueda">
+						<div class="container padding-1">
+							<div class="row">
+								<div class="col-sm-8">
+									<p:barChart model="#{bandReporteMB.stackedBarModel}" style="width: 100%; height: 270px;" />
+								</div>
+								<h:panelGroup id="pnlParametros" class="col-sm-4">
+									<div class="container">
+										<div class="row">
+											<div class="col-sm">
+												<p:outputLabel value="Criterio de búsqueda"/>
+												<p:selectOneMenu id="inCriterio" placeholder="Criterio de búsqueda" 
+													value="#{bandReporteMB.criterioBusqueda}"
+													styleClass="width-complete" style="min-width: 100% !important">
+													<f:selectItem itemLabel="- Selecione -" 		itemValue=""/>
+													<f:selectItem itemLabel="Todos los Proyectos" 	itemValue="all"/>
+													<f:selectItem itemLabel="Estrategia" 			itemValue="estrategia"/>
+													<f:selectItem itemLabel="Nombre del Proyecto" 	itemValue="nombre"/>
+													<f:selectItem itemLabel="Responsable"		 	itemValue="responsable"/>
+													<f:selectItem itemLabel="Etapa"		 			itemValue="etapa"/>
+													<f:selectItem itemLabel="Integrador" 			itemValue="integrador"/>
+													<f:selectItem itemLabel="Folio PE" 				itemValue="folio"/>
+													<f:selectItem itemLabel="Host" 					itemValue="host"/>
+													<f:selectItem itemLabel="Dirección IP" 			itemValue="ip"/>										
+													<f:ajax render="pnlParametros" listener="#{bandReporteMB.limpiaParametroBusqueda}"/>
+												</p:selectOneMenu>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm">
+												<p:outputLabel value="Búsqueda"/>
+												<p:inputText id="inBusqueda" placeholder="Búsqueda" 
+													styleClass="width-complete" 
+													value="#{bandReporteMB.busquedaParametro}" 
+													autocomplete="off "
+													disabled="#{bandReporteMB.criterioBusqueda == 'all'}"
+													rendered="#{bandReporteMB.criterioBusqueda != 'estrategia' and bandReporteMB.criterioBusqueda != 'responsable' and bandReporteMB.criterioBusqueda != 'etapa'}"/>
+												
+												<p:selectOneMenu id="listEstrategia" value="#{bandReporteMB.busquedaParametro}" styleClass="width-complete"
+													rendered="#{bandReporteMB.criterioBusqueda == 'estrategia'}">
+													 <f:selectItem itemLabel="- Selecione Estrategia -" itemValue="0"/>
+													 <f:selectItems value="#{bandReporteMB.listEstrategias}" var="estrategia" 
+													 	itemLabel="#{estrategia.estrategia}" itemValue="#{estrategia.estrategia}"/>
+												</p:selectOneMenu>
+												
+												<p:selectOneMenu id="selListUsuarios" value="#{bandReporteMB.busquedaParametro}" styleClass="width-complete" 
+													rendered="#{bandReporteMB.criterioBusqueda == 'responsable'}">
+													<f:selectItem itemLabel="- Selecione Responsable -" itemValue="0"/>
+													<f:selectItems value="#{bandReporteMB.listUsuariosAsignados}" var="usuario" 
+													 	itemLabel="#{usuario.nombre} #{usuario.primerApellido} #{usuario.segundoApellido}" itemValue="#{usuario.idUsuario}"/>
+												</p:selectOneMenu>
+												
+												<p:selectOneMenu id="selListEtapas" value="#{bandReporteMB.busquedaParametro}" styleClass="width-complete" 
+													rendered="#{bandReporteMB.criterioBusqueda == 'etapa'}">
+													<f:selectItem itemLabel="- Selecione Etapa -" 		itemValue="0"/>
+													<f:selectItem itemLabel="Portafolio Empresarial" 	itemValue="Portafolio Empresarial"/>
+													<f:selectItem itemLabel="F60" 						itemValue="F60"/>
+													<f:selectItem itemLabel="Infraestructura" 			itemValue="INFRAESTRUCTURA"/>
+													<f:selectItem itemLabel="Aplicativo"				itemValue="APLICATIVO"/>
+													<f:selectItem itemLabel="Pre Atp´s"					itemValue="PREATP"/>
+													<f:selectItem itemLabel="ATP´s" 					itemValue="ATP"/>
+													<f:selectItem itemLabel="RTO" 						itemValue="RTO"/>
+												</p:selectOneMenu>
+												
+											</div>
+										</div>
+										<div class="row padding-3">
+											<div class="col-sm text-center">
+												<p:commandButton 
+													value="Buscar" 
+													styleClass="width-120 ui-button-raised" 
+													actionListener="#{bandReporteMB.buscaProyectos}"
+													ajax="false"
+													update="tblProyects"
+													process="@all"/>
+											</div>
+										</div>
+									</div>
+								</h:panelGroup>
+							</div>
+						</div>
+						
+						<div class="container ">
+						    <hr/>
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel value="Número de registros obtenidos: #{bandReporteMB.countProyect}"/>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel value="Número de ambientes obtenidos: #{bandReporteMB.numAmbientes}"/>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel value="Número de Folios obtenidos: #{bandReporteMB.numFolios}"/>
+								</div>
+							</div>
+						</div>
+						
+						<div class="container">
+							<div class="row">
+								<div class="col-12">
+									<p:dataTable id="tblProyects" value="#{bandReporteMB.listProjects}" var="rsProject" paginator="true" rows="10" 
+											rowsPerPageTemplate="5,7,10,15" styleClass="font-13" reflow="true">
+										<f:facet name="header">
+											<div class="row">
+												<div class="col-sm-9 text-center">
+													<b><h:outputText value="Proyectos" style="float:rigth;"/></b>
+												</div>
+												<div class="col-sm-3 text-center">
+													<p:commandButton value="Generar Reporte" styleClass="ui-button-raised" 
+													icon="pi pi-file" title="Reporte Xlsx" ajax="false"
+													actionListener="#{bandReporteMB.generaReporteExcelAllData}"/>
+												</div>
+											</div>
+									    </f:facet>
+										<p:column headerText="Integrador" sortBy="#{rsProject.integrador}" styleClass="text-center">
+											<p:outputLabel value="#{rsProject.integrador}" styleClass="font-13"/>
+										</p:column>
+										<p:column headerText="Proyecto" sortBy="#{rsProject.nombreProyecto}" styleClass="text-center">
+											<p:outputLabel value="#{rsProject.nombreProyecto}" styleClass="font-13"/>
+										</p:column>
+										<p:column headerText="Estrategia" sortBy="#{rsProject.estrategia.estrategia}" styleClass="text-center">
+											<p:outputLabel value="#{rsProject.estrategia.estrategia}" styleClass="font-13"/>
+										</p:column>
+										<p:column headerText="Folio PE" sortBy="#{rsProject.portafolioEmp.folio}" styleClass="text-center" style="width: 80px">
+											<p:outputLabel value="#{rsProject.portafolioEmp.folio}" styleClass="font-13"/>
+										</p:column>
+										<p:column headerText="Etapa" sortBy="#{rsProject.faseActual}" styleClass="text-center width-115">
+											<p:outputLabel value="#{rsProject.faseActual}" styleClass="font-13"/>
+										</p:column>
+		<!-- 								<p:column headerText="Semáforo" styleClass="text-center"> -->
+											
+		<!-- 								</p:column> -->
+										<p:column headerText="% de avance" sortBy="#{rsProject.porcAvanceActual}" styleClass="text-center">
+											<p:outputLabel value="#{rsProject.porcAvanceActual}%" styleClass="font-13"/>
+										</p:column>
+										<p:column headerText="Responsable" sortBy="#{rsProject.usuarioAsignado.nombre}" styleClass="text-center">
+											<p:outputLabel styleClass="font-13" value="#{rsProject.usuarioAsignado.nombre} #{rsProject.usuarioAsignado.primerApellido} #{rsProject.usuarioAsignado.segundoApellido}"/>
+										</p:column>
+										<p:column headerText="Incidente" styleClass="text-center">
+											<p:commandButton value="Detalle de incidentes" 
+												oncomplete="PF('verDialogAsignacionIncidentes').show()"
+												styleClass="font-13 ui-button-raised"
+												action="#{bandReporteMB.cargaIncidentes}"
+												update=":templateForm:pestanias:incidentesDialog"
+						                		process="@all">
+												<f:setPropertyActionListener value="#{rsProject}" target="#{bandReporteMB.proyectoSelected}"/>
+											</p:commandButton>
+										</p:column>
+										<p:column headerText="Detalle" styleClass="text-center">
+											<p:commandButton value="Detalle del proyecto" 
+												oncomplete="PF('verDialogSeguimiento').show()"
+												action="#{bandReporteMB.cargaSeguimiento}"
+												styleClass="font-13 ui-button-raised"
+												update=":templateForm:pestanias:seguimientoDialog"
+						                		process="@all">
+												<f:setPropertyActionListener value="#{rsProject}" target="#{bandReporteMB.proyectoSelected}"/>
+											</p:commandButton>
+										</p:column>
+									</p:dataTable>
+								</div>
+							</div>
+						</div>
+						
+						<p:dialog id="incidentesDialog" widgetVar="verDialogAsignacionIncidentes" 
+							header="Detalles de Incidentes de #{bandReporteMB.proyectoSelected.nombreProyecto}" 
+							height="350" showEffect="fade" hideEffect="fade" modal="true" style="width: 60%;">
+							
+							<div class="container">
+								
+								<p:dataTable id="tblIncidentes" value="#{bandReporteMB.listIncidentes}" var="rsIncidentes" styleClass="font-13" reflow="true">
+									<p:column headerText="Incidente" style="po">
+										<p:outputLabel value="#{rsIncidentes.issueIncidente}"/>
+									</p:column>
+									<p:column headerText="Etapa">
+										<p:outputLabel value="#{rsIncidentes.etapa}"/>
+									</p:column>
+									<p:column headerText="Responsable">
+										<p:outputLabel value="#{rsIncidentes.responsable.area}"/>
+									</p:column>
+									<p:column headerText="Fecha Inicio">
+										<p:outputLabel value="#{rsIncidentes.fechaInicio}"/>
+									</p:column>
+									<p:column headerText="Fecha Solución">
+										<p:outputLabel value="#{rsIncidentes.fechaResolucion}"/>
+									</p:column>
+									<p:column headerText="Detalles">
+										<p:outputLabel value="#{rsIncidentes.detalles}"/>
+									</p:column>
+									<p:column headerText="Estatus">
+										<p:outputLabel styleClass="customer-badge status-incidente-#{rsIncidentes.estatus}" value="#{rsIncidentes.estatus}"/>
+									</p:column>
+								</p:dataTable>
+								
+							</div>
+							
+						</p:dialog>
+						
+						<p:dialog id="seguimientoDialog" widgetVar="verDialogSeguimiento" 
+							header="Detalles del seguimiento de #{bandReporteMB.proyectoSelected.nombreProyecto}" 
+							height="400" showEffect="fade" hideEffect="fade" modal="true" style="width: 70%;">
+							
+							<h:panelGroup id="panelDetalles">			
+								<div class="container">
+									<div class="row">
+									
+										<div class="col-sm-3 padding-1">
+											<div class="col pad-top-1 bck-color-blue shadow-sapi height-100">
+												<div class="row">
+													<div class="col-sm-12 text-center">
+														<p:outputLabel value="Nombre del Proyecto"/>
+													</div>
+													<div class="col-sm-12 text-center">
+														<p:outputLabel styleClass="margin-4" value="#{bandReporteMB.proyectoSelected.nombreProyecto}"/>
+													</div>
+												</div>							
+											</div>
+										</div>
+										
+										<div class="col-sm-3 padding-1">
+											<div class="col pad-top-1 bck-color-blue shadow-sapi height-100">
+												<div class="row">
+													<div class="col-sm-12 text-center">
+														<p:outputLabel value="Descripción"/>
+													</div>
+													<div class="col-sm-12 text-center">
+														<p:outputLabel styleClass="" value="#{bandReporteMB.proyectoSelected.descripcion}"/>
+													</div>
+												</div>							
+											</div>
+										</div>
+										
+										<div class="col-sm-3 padding-1">
+											<div class="col pad-top-1 bck-color-blue shadow-sapi height-100">
+												<div class="row">
+													<div class="col-sm-12 text-center">
+														<p:outputLabel value="Gerencia"/>
+													</div>
+													<div class="col-sm-12 text-center">
+														<p:outputLabel styleClass="padding-5" value="#{bandReporteMB.proyectoSelected.gerenciaDto.gerencia}"/>
+													</div>
+												</div>				
+											</div>
+										</div>
+										
+										<div class="col-sm-3 padding-1">
+											<div class="col pad-top-1 bck-color-blue shadow-sapi height-100">
+												<div class="row">
+													<div class="col-sm-12 text-center">
+														<p:outputLabel value="Solicitante"/>
+													</div>
+													<div class="col-sm-12 text-center">
+														<p:outputLabel styleClass="padding-5" value="#{bandReporteMB.proyectoSelected.solicitante}"/>
+													</div>
+												</div>							
+											</div>
+										</div>
+										
+									</div>
+								</div>
+								
+							<div class="container height-20">
+								<div class="row">
+										<h:panelGroup rendered="#{bandReporteMB.proyectoSelected.portafolioEmp.idSeguimiento != ''}">
+											<div class="col-sm-6 padding-1">
+												<div class="encabezado-div #{(bandReporteMB.proyectoSelected.faseSiguiente == 'Portafolio Empresarial') ? 'bck-green' : 'bck-blue' } shadow-sapi-top">
+													<div class="text-center" style="padding: 0.5rem;">
+														<p:outputLabel value="Portafolio Empresarial"/>
+													</div>
+												</div>
+												<div class="cuerpo-div shadow-sapi height-89">
+													<div class="container padding-12-px">						
+														<div class="row">
+															<div class="col-6">
+																<p:outputLabel styleClass="font-weight-500 width-200" value="Aplica"/>
+																<p:outputLabel styleClass="width-200" value="#{bandReporteMB.proyectoSelected.portafolioEmp.aplica}"/>
+															</div>
+															<div class="col-6">
+																<p:outputLabel styleClass="font-weight-500 width-200" value="Folio"/>
+																<p:outputLabel styleClass="width-200" value="#{bandReporteMB.proyectoSelected.portafolioEmp.folio}"/>
+															</div>
+														</div>		
+														<div class="row">
+															<div class="col-6">
+																<p:outputLabel styleClass="font-weight-500 width-200" value="Entrada"/>
+																<p:outputLabel styleClass="width-200" value="#{bandReporteMB.proyectoSelected.portafolioEmp.entrada}"/>
+															</div>
+															<div class="col-6">
+																<p:outputLabel styleClass="font-weight-500 width-200" value="Salida"/>
+																<p:outputLabel styleClass="width-200" value="#{bandReporteMB.proyectoSelected.portafolioEmp.salida}"/>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup id="pnlF60" class="col-sm-6 padding-1" rendered="#{bandReporteMB.proyectoSelected.proyectoF60.idProyectoF60 != 0}">
+											<div class="encabezado-div #{(bandReporteMB.proyectoSelected.faseSiguiente == 'F60') ? 'bck-green' : 'bck-blue' } shadow-sapi-top">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="F60"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-89">
+												<div class="container ">
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Tipo F60*"/>
+															<p:inputText id="inTipoF60" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.proyectoF60.tipoF60.tipoF60}"
+																readonly="true" />
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Jefes*"/>
+															<p:inputText id="inJefeF60" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.proyectoF60.jefeF60.nombre}"
+																readonly="true" />
+														</div>
+														<div class="col-12">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Responsable*"/>	
+															<p:inputText styleClass="width-complete" 
+																value="#{bandReporteMB.proyectoSelected.proyectoF60.responsable}"/>
+														</div>
+													</div>					
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:inputText id="inFecInicioF60" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.proyectoF60.fechaInicio}"
+																readonly="true" />
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.proyectoF60.fechaCompromiso}"/>
+														</div>
+													</div>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:inputText id="inFecFinF60" styleClass="input-form"
+																value="#{bandReporteMB.proyectoSelected.proyectoF60.fechaFin}"
+																readonly="true" />
+														</div>
+														<div class="col-6">
+															<br/>
+															<p:selectBooleanCheckbox styleClass=" " itemLabel="Cuenta con infraestructura" 
+																value="#{bandReporteMB.proyectoSelected.proyectoF60.cuentaConInfraestructura}" 
+																disabled="true">
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{bandReporteMB.proyectoSelected.proyectoF60.sinFechas}" 
+																disabled="true">
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup styleClass="col-sm-6 padding-1" rendered="#{bandReporteMB.proyectoSelected.proyectoF60.estatus == 'TERMINADO' and bandReporteMB.proyectoSelected.proyectoF60.cuentaConInfraestructura != true }">
+											<div class="encabezado-div #{(bandReporteMB.proyectoSelected.faseSiguiente == 'INFRAESTRUCTURA') ? 'bck-green' : 'bck-blue' } shadow-sapi-top">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="Infraestructura"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82" style="padding-bottom: 30px;">
+												<div class="container ">
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="KickOff"/>										
+															<p:inputText id="inKickOffInfra" styleClass="input-form" value="#{bandReporteMB.proyectoSelected.seguimientoInfra.kickoff}" readonly="true" />
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:inputText id="inFecInicioInfra" styleClass="input-form"
+																	value="#{bandReporteMB.proyectoSelected.seguimientoInfra.fechaEnvio}"
+																	readonly="true" />
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" value="#{bandReporteMB.proyectoSelected.seguimientoInfra.fechaCompromiso}"/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:inputText id="inFecFinInfra" styleClass="input-form"
+																value="#{bandReporteMB.proyectoSelected.seguimientoInfra.fechaEntregaUsuario}"
+																readonly="true"/>
+														</div>
+														<div class="col-6">
+															<br/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{bandReporteMB.proyectoSelected.seguimientoInfra.sinFechas}" 
+																disabled="true">
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup styleClass="col-sm-6 padding-1" rendered="#{bandReporteMB.proyectoSelected.seguimientoInfra.estatus == 'TERMINADO' or ( bandReporteMB.proyectoSelected.proyectoF60.cuentaConInfraestructura == true and bandReporteMB.proyectoSelected.proyectoF60.estatus == 'TERMINADO' ) }">
+											<div class="encabezado-div #{(bandReporteMB.proyectoSelected.faseSiguiente == 'APLICATIVO') ? 'bck-green' : 'bck-blue' } shadow-sapi-top">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="Aplicativo"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82">
+												<div class="container ">						
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Despliegue"/>										
+															<p:inputText id="inFecInicioAplicativo" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.aplicativo.fechaDespliegue}" readonly="true" />
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin Pruebas"/>
+															<p:inputText id="inFecFinPruebas" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.aplicativo.fechaFinPruebas}"
+																readonly="true" />
+														</div>
+													</div>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Notificación"/>
+															<p:inputText id="inFecFinAplicativo" styleClass="input-form"
+																value="#{bandReporteMB.proyectoSelected.aplicativo.fechaNotificacion}"
+																readonly="true" />
+														</div>
+														<div class="col-6">
+															<br/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{bandReporteMB.proyectoSelected.aplicativo.sinFechas}" 
+																disabled="true">
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>	
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup class="col-sm-6 padding-1" rendered="#{bandReporteMB.proyectoSelected.aplicativo.estatus == 'TERMINADO'}">
+											<div class="encabezado-div #{(bandReporteMB.proyectoSelected.faseSiguiente == 'PREATP') ? 'bck-green' : 'bck-blue' } shadow-sapi-top">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="Pre ATP´s"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82">
+												<div class="container ">						
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:inputText id="inFecInicioPreAtp" styleClass="input-form" readonly="true"
+																value="#{bandReporteMB.proyectoSelected.preAtp.fechaInicio}" />
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.preAtp.fechaCompromiso}" />
+														</div>
+													</div>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:inputText id="inFecFinPreAtp" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.preAtp.fechaFin}"
+																readonly="true" />
+														</div>
+														<div class="col-6">
+															<br/>													
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{bandReporteMB.proyectoSelected.preAtp.sinFechas}" 
+																disabled="true">
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup class="col-sm-6 padding-1" rendered="#{bandReporteMB.proyectoSelected.preAtp.estatus == 'TERMINADO'}">
+											<div class="encabezado-div #{(bandReporteMB.proyectoSelected.faseSiguiente == 'ATP') ? 'bck-green' : 'bck-blue' } shadow-sapi-top">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="ATP´s"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82">
+												<div class="container ">						
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:inputText id="inFecInicioAtp" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.segATP.fechaInicio}"
+																readonly="true" />
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" value="#{bandReporteMB.proyectoSelected.segATP.fechaCompromiso}" />
+														</div>
+													</div>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:inputText id="inFecFinAtp" styleClass="input-form" value="#{bandReporteMB.proyectoSelected.segATP.fechaFin}"
+																readonly="true" />
+														</div>
+														<div class="col-6">
+															<br/>													
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{bandReporteMB.proyectoSelected.segATP.sinFechas}" 
+																disabled="true">
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup id="pnlRTO" class="col-sm-6 padding-1" rendered="#{bandReporteMB.proyectoSelected.segATP.estatus == 'TERMINADO'}">
+											<div class="encabezado-div #{(bandReporteMB.proyectoSelected.faseSiguiente == 'RTO') ? 'bck-green' : 'bck-blue' } shadow-sapi-top">
+												<div class="text-center" style="padding: 0.5rem;">
+													<p:outputLabel value="RTO"/>
+												</div>
+											</div>
+											<div class="cuerpo-div shadow-sapi height-82">
+												<div class="container ">						
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Inicio"/>										
+															<p:inputText id="inFecInicioRto" styleClass="input-form" 
+																value="#{bandReporteMB.proyectoSelected.segRTO.fechaInicio}"
+																readonly="true" />
+														</div>
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Compromiso"/>
+															<p:inputText readonly="true" styleClass="input-form" value="#{bandReporteMB.proyectoSelected.segRTO.fechaCompromiso}" />
+														</div>
+													</div>		
+													<div class="row">
+														<div class="col-6">
+															<p:outputLabel styleClass="font-weight-500 width-200" value="Fecha Fin"/>
+															<p:inputText id="inFecFinRto" styleClass="input-form" value="#{bandReporteMB.proyectoSelected.segRTO.fechaFin}" readonly="true"/>
+														</div>
+														<div class="col-6">
+															<br/>
+														</div>
+													</div>
+													<div class="row">
+														<div class="col-12 text-center">
+															<p:selectBooleanCheckbox styleClass="padding-1" itemLabel="No se cuenta con fechas" 
+																value="#{bandReporteMB.proyectoSelected.segRTO.sinFechas}" 
+																disabled="true">
+															</p:selectBooleanCheckbox>
+														</div>
+													</div>
+												</div>
+											</div>
+										</h:panelGroup>
+										
+										<h:panelGroup class="container" rendered="#{bandReporteMB.proyectoSelected.listAmbientes != null}">
+												<div class="row">
+													<div class="col-sm-12 padding-1">
+														<p:dataTable id="tblInfraestructura" value="#{bandReporteMB.proyectoSelected.listAmbientes}"
+															var="rsAmbiente" reflow="true" style="font-size: 13px;" >
+															<f:facet name="header" >
+																<div class="justify-content-center text-center">
+																	<b><h:outputText value="Ambientes del Proyecto #{bandReporteMB.proyectoSelected.nombreProyecto}"/></b>
+																</div>
+														    </f:facet>
+															 <p:column headerText="Ambiente" sortBy="#{rsAmbiente.tipoAmbiente.tipoAmbiente}" style="text-align: center;">
+																<h:outputText id="rsLbAmbiente" value="#{rsAmbiente.tipoAmbiente.tipoAmbiente}"/>
+															</p:column>
+															<p:column headerText="CPU" sortBy="#{rsAmbiente.cpu}" style="text-align: center;" styleClass="width-40">
+																<h:outputText id="rsLbCPU" value="#{rsAmbiente.cpu}"/>
+															</p:column>
+															<p:column headerText="Memoria" sortBy="#{rsAmbiente.memoria}" style="text-align: center;" styleClass="width-40">
+																<h:outputText id="rsLbMemoria" value="#{rsAmbiente.memoria}"/>
+															</p:column>
+															<p:column headerText="Disco Duro" sortBy="#{rsAmbiente.discoDuro}" style="text-align: center;" styleClass="width-40">
+																<h:outputText id="rsLbDiscoDuro" value="#{rsAmbiente.discoDuro}"/>
+															</p:column>
+															<p:column headerText="Unidad Medida HDD" sortBy="#{rsAmbiente.unidadMedidaDD}" style="text-align: center;">
+																<h:outputText id="rsLbUDM" value="#{rsAmbiente.unidadMedidaDD}"/>
+															</p:column>
+															<p:column headerText="Sistema Operativo" sortBy="#{rsAmbiente.sistemaOperativo}" style="text-align: center;">
+																<h:outputText id="rsLbSistemaOperativo" value="#{rsAmbiente.sistemaOperativo}"/>
+															</p:column>
+															<p:column headerText="Base de Datos" sortBy="#{rsAmbiente.baseDatos}" style="text-align: center;">
+																<h:outputText id="rsLbBaseDatos" value="#{rsAmbiente.baseDatos}"/>
+															</p:column>
+															<p:column headerText="Hostname" sortBy="#{rsAmbiente.hostName}" style="text-align: center;" styleClass="width-175">
+																<h:outputText id="rsLbHostname" value="#{rsAmbiente.hostName}"/>
+															</p:column>
+															<p:column headerText="IP" sortBy="#{rsAmbiente.ip}" style="text-align: center;" styleClass="width-195">
+																<h:outputText id="rsLbIp" value="#{rsAmbiente.ip}"/>
+															</p:column>
+															<p:column headerText="Entrega de Equipo" sortBy="#{rsAmbiente.entregaEquipo}" style="text-align: center;" styleClass="width-90">
+																<h:outputText id="rsLbEntregaEquipo" value="#{rsAmbiente.entregaEquipo}"/>
+															</p:column>
+														
+														</p:dataTable>
+													</div>
+												</div>
+										</h:panelGroup>
+										
+										<br/>
+									</div>
+								</div>
+								
+							</h:panelGroup>
+							<br/>
+							
+							
+						</p:dialog>
+					
+					</h:panelGroup>
+				</p:tab>
+				<p:tab id="tab1" title="Detalle mensual por Etapa">
+				<div class="container padding-1">
+						<H3>Reportes Mensuales en Etapa</H3>
+					</div>
+					
+					<h:panelGroup>
+					<div class="form-group">
+						<div class="form-group">
+							<div class="container">
+								<div class="row">
+									<div class="col-sm-5">
+										<h:outputLabel value=""/>
+									</div>
+								</div>
+							</div>
+							<br/><br/>
+							
+							<div class="container">
+							  <div class="row">
+													<div class="col-sm-6">
+														<p:outputLabel styleClass="font-weight-500 input-form" value="Entrada"/>
+														<p:calendar id="inFecEntrada1" navigator="true" placeholder="Entrada" required="false" autocomplete="off"
+															pattern="yyyy-mm-dd" locale="es" value="#{MB.ENTRADA}"/>
+													</div>
+													<div class="col-sm-6">
+														<p:outputLabel styleClass="font-weight-500 input-form" value="Salida"/>
+														<p:calendar id="inFecSalida1" navigator="true" placeholder="Salida" required="false" autocomplete="off"
+															pattern="yyyy-mm-dd" locale="es" value="#{MB.SALIDA}"/>
+													</div>
+												</div>
+							</div>
+						</div>
+						
+						<div class="row">
+												<div class="col-sm-4">
+												</div>
+												<div class="col-sm-4 text-center">
+													<p:commandButton 
+														value="Busqueda" 
+														styleClass="ui-button-raised " 
+														style="width:200px"
+														actionListener="#{ThrCancelMB.BusquedaTHRCANCEL}" 
+														ajax="false"
+														update="pnlPortafolioEmp pnlMsgSucc pnlMsgErr"
+														process="@this"/>
+												</div>
+											</div>
+						
+					</div>
+					
+					</h:panelGroup>
+					
+					<h:panelGroup id="pnlBusquedaMensualEtapas">
+						<div class="container padding-1">
+							<div class="row">
+								<div class="col-sm-8">
+									<p:barChart model="#{bandReporteMB.stackedBarModel}" style="width: 100%; height: 270px;" />
+								</div>
+								</div>
+								</div>
+								</h:panelGroup>
+					
+					
+				</p:tab>
+				
+				
+				
+				
+				
+				
+				
+				<p:tab id="tab2" title="Entregas por Etapa">
+				</p:tab>
+			</p:tabView>
+			
+			
+			
+		</h:panelGroup>
+	
+	</ui:define>
+</ui:composition>

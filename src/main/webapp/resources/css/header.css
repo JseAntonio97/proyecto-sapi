@@ -1,0 +1,15 @@
+.header{
+	background-color: #0B4DA2;
+	align-self: center;
+    padding: 0.5%;
+    position: relative;
+    width: 100%
+}
+
+.logo{
+	width: 20%;
+}
+
+body{
+	margin: 0;
+}

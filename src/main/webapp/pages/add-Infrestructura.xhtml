@@ -1,0 +1,462 @@
+<ui:composition xmlns	=	"http://www.w3.org/1999/xhtml"
+		xmlns:ui=	"http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h	=	"http://xmlns.jcp.org/jsf/html"
+		xmlns:f	=	"http://xmlns.jcp.org/jsf/core"
+    	xmlns:p	=	"http://primefaces.org/ui"
+		template = "../template/template.xhtml">
+	<ui:define name = "contenido">
+	
+		<h:panelGroup id="InfraPanel">
+		
+			<h:panelGroup id="pnlMsgSucc" rendered="#{infraestructuraRegMB.msgSuccess != ''}">
+				<div class="container pad-top-1">
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="alert alert-success alert-dismissible">
+						    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+						    	<strong style="font-size: 15px;"> &#10003; </strong> - <h:outputLabel id="lbSatisfacorio" value="#{infraestructuraRegMB.msgSuccess}"/>
+						  	</div>
+						</div>								
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<h:panelGroup id="pnlMsgErr" rendered="#{infraestructuraRegMB.msgError != ''}">
+		   		<div class="container pad-top-1" >
+					<div class="row">
+						<div class="col-12">
+						  	<div class="alert alert-danger alert-dismissible">
+						    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+							    <strong>Atención</strong> - <p:outputLabel value = "#{infraestructuraRegMB.msgError}"/>
+							</div>
+						</div>								
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<h:panelGroup id="pnlMsgWarn" rendered="#{infraestructuraRegMB.msgWarningHost != ''}">
+		   		<div class="container pad-top-1" >
+					<div class="row">
+						<div class="col-12">
+						  	<div class="alert alert-warning alert-dismissible">
+						    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+							    <strong>Precaución</strong> - <p:outputLabel value = "#{infraestructuraRegMB.msgWarningHost}"/>
+							    <h:dataTable value="#{infraestructuraRegMB.listfolioProyHost}" var="listar">				    		
+				    		 		<h:column>
+								    	<strong>&#8226;</strong> #{listar.folio} - #{listar.nombreProyeco}
+								    </h:column>
+						    	</h:dataTable>
+							</div>
+						</div>								
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<h:panelGroup id="pnlMsgWarn2" rendered="#{infraestructuraRegMB.msgWarningIp != ''}">
+		   		<div class="container pad-top-1" >
+					<div class="row">
+						<div class="col-12">
+						  	<div class="alert alert-warning alert-dismissible">
+						    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+							    <strong>Precaución</strong> - <p:outputLabel value = "#{infraestructuraRegMB.msgWarningIp}"/>
+							    <h:dataTable value="#{infraestructuraRegMB.listfolioProyIp}" var="listar">				    		
+				    		 		<h:column>
+								    	<strong>&#8226;</strong> #{listar.folio} - #{listar.nombreProyeco}
+								    </h:column>
+						    	</h:dataTable>
+							</div>
+						</div>								
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<div class="container">
+				<H3>Infraestructura del proyecto "#{infraestructuraRegMB.proyectoAddInfra.nombreProyecto}"</H3>
+			</div>
+			<div class="container">
+				<div class="row">
+					<h:panelGroup  rendered="#{infraestructuraRegMB.numeroAmbientes != 0}">
+						<div class="col-4">
+							<p:outputLabel 
+								value="Número de Ambientes registrados: #{infraestructuraRegMB.numeroAmbientes}"/>
+						</div>
+					</h:panelGroup>
+					<div class="col-4">
+						<p:commandButton value="Ir al seguimiento de #{infraestructuraRegMB.proyectoAddInfra.nombreProyecto}" 
+							styleClass="ui-button-raised" actionListener="#{infraestructuraRegMB.seguimientoProyectoRedirect}"/>
+					</div>
+				</div>
+			</div>
+			
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<hr/>
+					</div>
+				</div>
+			</div>
+			
+			<h:panelGroup id="generalPanel">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm">
+							<p:outputLabel id="lbAmbiente" value="Ambiente*:" styleClass="width-complete"/>
+							<p:selectOneMenu id="inAmbiente" value="#{infraestructuraRegMB.ambienteAdd.tipoAmbiente.idTipoAmbiente}" placeholder="Ambiente"
+								styleClass="width-complete" style="min-width: 100% !important">
+								<f:selectItems value="#{infraestructuraRegMB.listTipoAmbiente}" var="tpAmbiente" 
+									itemLabel="#{tpAmbiente.tipoAmbiente}" itemValue="#{tpAmbiente.idTipoAmbiente}"/>
+							</p:selectOneMenu>
+						</div>
+						<div class="col-sm">
+							<p:outputLabel id="lbCPU" value="CPU´s*:" styleClass="width-complete"/>
+							<p:inputText id="inCPU" placeholder="CPU" styleClass="width-complete #{infraestructuraRegMB.styleErrorCpu}"
+								value="#{infraestructuraRegMB.ambienteAdd.cpu}" autocomplete="off">
+								<p:keyFilter mask="num" preventPaste="false"/>
+							</p:inputText>
+						</div>
+						<div class="col-sm">
+							<p:outputLabel id="lbMemoria" value="Memoria*:" styleClass="width-complete"/>
+							<p:inputText id="inMemoria" placeholder="Memoria" styleClass="width-complete #{infraestructuraRegMB.styleErrorMemory}"
+								value="#{infraestructuraRegMB.ambienteAdd.memoria}" autocomplete="off">
+								<p:keyFilter mask="num" preventPaste="false"/>
+							</p:inputText>
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm">
+							<p:outputLabel id="lbDiscoDuro" value="Disco Duro*:" styleClass="width-complete"/>
+							<p:inputText id="inDiscoDuro" placeholder="Disco Duro" styleClass="width-complete #{infraestructuraRegMB.styleErrorHdd}"
+								value="#{infraestructuraRegMB.ambienteAdd.discoDuro}" autocomplete="off">
+								<p:keyFilter mask="num" preventPaste="false"/>
+							</p:inputText>
+						</div>
+						<div class="col-sm">
+							<p:outputLabel id="lbUnidad" value="Unidad  de Medida del HDD*:" styleClass="width-complete"/>
+							<p:selectOneMenu id="inUnidad" value="#{infraestructuraRegMB.ambienteAdd.unidadMedidaDD}" 
+								styleClass="width-complete" style="min-width: 100% !important">
+								<f:selectItem itemLabel="Mb" itemValue="Mb"/>
+								<f:selectItem itemLabel="Gb" itemValue="Gb"/>
+								<f:selectItem itemLabel="Tb" itemValue="Tb"/>
+							</p:selectOneMenu>
+						</div>
+						<div class="col-sm">
+							<p:outputLabel id="lbSistemaOperatovo" value="Sistema Operativo:" styleClass="width-complete"/>
+							<p:inputText id="inSistemaOperativo" placeholder="Sistema Operativo" styleClass="width-complete"
+							value="#{infraestructuraRegMB.ambienteAdd.sistemaOperativo}" autocomplete="off"/>
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm">
+							<p:outputLabel id="lbBaseDatos" value="Base de Datos:" styleClass="width-complete"/>
+							<p:inputText id="inBaseDatos" placeholder="Base de Datos" styleClass="width-complete"
+							value="#{infraestructuraRegMB.ambienteAdd.baseDatos}" autocomplete="off"/>
+						</div>
+						<div class="col-sm">
+							<p:outputLabel id="lbHostname" value="Hostname*:" styleClass="width-complete"/>
+							<p:inputText id="inHostname" placeholder="Hostname" styleClass="width-complete #{infraestructuraRegMB.styleErrorHost}"
+								value="#{infraestructuraRegMB.ambienteAdd.hostName}" maxlength="25" autocomplete="off">
+								<p:ajax event="change" listener="#{infraestructuraRegMB.VerificaHost}" 
+									update="InfraPanel" process="@all" />
+							</p:inputText>
+							<p:outputLabel id="lbMsgHost" value="#{infraestructuraRegMB.msgHost}" rendered="#{infraestructuraRegMB.msgHost != ''}" 
+								styleClass="width-complete color-red" />
+						</div>
+						<div class="col-sm">
+							<p:outputLabel id="lbIP" value="IP*:" styleClass="width-complete"/>
+							<p:inputText id="inIP" placeholder="IP" styleClass="width-complete #{infraestructuraRegMB.styleErrorIp}" 
+								value="#{infraestructuraRegMB.ambienteAdd.ip}" maxlength="30" autocomplete="off">
+								<p:ajax event="change" listener="#{infraestructuraRegMB.VerificaIp}" 
+									update="InfraPanel" process="@all" />
+							</p:inputText>
+							
+							<p:outputLabel id="lbMsgIp" value="#{infraestructuraRegMB.msgIP}" rendered="#{infraestructuraRegMB.msgIP != ''}" 
+								styleClass="width-complete color-red" />
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4">
+							<p:outputLabel id="lbEntrega" value="Entrega de Equipo:" styleClass="width-complete"/>
+							
+							<p:calendar id="inFecEntrega" navigator="true" required="false" styleClass="input-form"
+								pattern="yyyy-mm-dd" locale="es" value="#{infraestructuraRegMB.fechaEntregaEquipo}"
+								placeholder="Entrega de Equipo" autocomplete="off" disabledWeekends="true">
+								
+								<p:ajax event="dateSelect" listener="#{infraestructuraRegMB.AsignaFechaEntrega}"/>
+								<p:ajax event="keyup" listener="#{infraestructuraRegMB.AsignaFechaEntrega}" />
+							</p:calendar>
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12">
+							<p:outputLabel id="lbComentarios" value="Comentarios:" styleClass="width-complete"/>
+							<p:inputTextarea styleClass="input-form" maxlength="500" value="#{infraestructuraRegMB.ambienteAdd.comentario}" />
+						</div>
+					</div>
+				</div>
+			</h:panelGroup>
+			
+			<div class="container padding-1 text-center">
+				<div class="row">
+					<div class="col-sm">
+						<p:commandButton 
+							id="btnAddInfra" 
+							value="Guardar" 
+							styleClass="ui-button-raised button-190-px" 
+							ajax="false" 
+							icon="pi pi-save"
+							actionListener="#{infraestructuraRegMB.RegistraAmbiente}" 
+							update="generalPanel pnlMsgSucc pnlMsgErr" 
+							process="@all"/>
+					</div>
+				</div>
+			</div>
+			
+			<h:panelGroup id="pnlTblInfra" rendered="#{infraestructuraRegMB.numeroAmbientes != 0}">
+				<div class="datatable-infra pad-bottom-3 text-center">
+					<div class="row">
+						<div class="col-12">
+						
+							<p:dataTable id="tblInfraestructura" value="#{infraestructuraRegMB.listAmbiente}" 
+								var="rsAmbiente" reflow="true" style="font-size: 13px;">
+								
+								<p:column headerText="" styleClass="width-90">
+									<div class="container">
+										<div class="row">
+											<div class="col-sm padding-1 text-center">
+												<p:commandButton 
+													id="updateAmbienteTable"
+													oncomplete="PF('verAmbiente').show()"
+													styleClass="ui-button-raised"
+													title="Actualizar"
+													icon="pi pi-sync"
+													update="templateForm:updateAmbiente"
+													process="@all">
+													<f:setPropertyActionListener value="#{rsAmbiente}" 
+														target="#{infraestructuraRegMB.ambienteUpdate}"/>
+												</p:commandButton>
+											</div>
+											<div class="col-sm padding-1 text-center">
+												<p:commandButton 
+													id="eliminarAmbienteTable"
+													oncomplete="PF('verBorrarAmbiente').show()"
+													styleClass="ui-button-raised ui-button-danger"
+													title="Eliminar"
+													icon="pi pi-trash"
+													update="templateForm:borrarAmbiente"
+													process="@all">
+													<f:setPropertyActionListener value="#{rsAmbiente}" 
+														target="#{infraestructuraRegMB.ambienteDelete}"/>
+												</p:commandButton>
+											</div>
+										</div>
+									</div>
+								</p:column>
+								<p:column headerText="Ambiente" sortBy="#{rsAmbiente.tipoAmbiente.tipoAmbiente}" style="text-align: center;">
+									<h:outputText id="rsLbAmbiente" value="#{rsAmbiente.tipoAmbiente.tipoAmbiente}" title="#{rsAmbiente.comentario}"/>
+								</p:column>
+								<p:column headerText="CPU" sortBy="#{rsAmbiente.cpu}" style="text-align: center;" styleClass="width-40">
+									<h:outputText id="rsLbCPU" value="#{rsAmbiente.cpu}"/>
+								</p:column>
+								<p:column headerText="Memoria" sortBy="#{rsAmbiente.memoria}" style="text-align: center;" styleClass="width-40">
+									<h:outputText id="rsLbMemoria" value="#{rsAmbiente.memoria}"/>
+								</p:column>
+								<p:column headerText="Disco Duro" sortBy="#{rsAmbiente.discoDuro}" style="text-align: center;" styleClass="width-40">
+									<h:outputText id="rsLbDiscoDuro" value="#{rsAmbiente.discoDuro}"/>
+								</p:column>
+								<p:column headerText="Unidad Medida HDD" sortBy="#{rsAmbiente.unidadMedidaDD}" style="text-align: center;">
+									<h:outputText id="rsLbUDM" value="#{rsAmbiente.unidadMedidaDD}"/>
+								</p:column>
+								<p:column headerText="Sistema Operativo" sortBy="#{rsAmbiente.sistemaOperativo}" style="text-align: center;">
+									<h:outputText id="rsLbSistemaOperativo" value="#{rsAmbiente.sistemaOperativo}"/>
+								</p:column>
+								<p:column headerText="Base de Datos" sortBy="#{rsAmbiente.baseDatos}" style="text-align: center;">
+									<h:outputText id="rsLbBaseDatos" value="#{rsAmbiente.baseDatos}"/>
+								</p:column>
+								<p:column headerText="Hostname" sortBy="#{rsAmbiente.hostName}" style="text-align: center;" styleClass="width-175">
+									<h:outputText id="rsLbHostname" value="#{rsAmbiente.hostName}"/>
+								</p:column>
+								<p:column headerText="IP" sortBy="#{rsAmbiente.ip}" style="text-align: center;" styleClass="width-195">
+									<h:outputText id="rsLbIp" value="#{rsAmbiente.ip}"/>
+								</p:column>
+								<p:column headerText="Entrega de Equipo" sortBy="#{rsAmbiente.entregaEquipo}" style="text-align: center;" styleClass="width-90">
+									<h:outputText id="rsLbEntregaEquipo" value="#{rsAmbiente.entregaEquipo}"/>
+								</p:column>
+								
+							</p:dataTable>
+							
+						</div>
+					</div>
+				</div>
+				
+				<p:dialog id="updateAmbiente" widgetVar="verAmbiente" header="Actualizar Ambiente" 
+					minHeight="50" width="700" showEffect="fade" hideEffect="fade" modal="true">
+					
+					<h:panelGroup id="ambienteUpdate">
+						<div class="container">
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpAmbiente" value="Ambiente:" styleClass="width-complete"/>
+									<p:selectOneMenu id="inUpAmbiente" value="#{infraestructuraRegMB.ambienteUpdate.tipoAmbiente.idTipoAmbiente}" placeholder="Ambiente"
+										styleClass="width-complete" style="min-width: 100% !important">
+										<f:selectItems value="#{infraestructuraRegMB.listTipoAmbiente}" var="tpAmbiente" 
+											itemLabel="#{tpAmbiente.tipoAmbiente}" itemValue="#{tpAmbiente.idTipoAmbiente}"/>
+									</p:selectOneMenu>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpCPU" value="CPU´s:" styleClass="width-complete"/>
+									<p:inputText id="inUpCPU" placeholder="CPU" styleClass="width-complete"
+										value="#{infraestructuraRegMB.ambienteUpdate.cpu}" autocomplete="off">
+										<p:keyFilter mask="num" />
+									</p:inputText>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpMemoria" value="Memoria:" styleClass="width-complete"/>
+									<p:inputText id="inUpMemoria" placeholder="Memoria" styleClass="width-complete"
+										value="#{infraestructuraRegMB.ambienteUpdate.memoria}" autocomplete="off">
+										<p:keyFilter mask="num" />
+									</p:inputText>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpDiscoDuro" value="Disco Duro:" styleClass="width-complete"/>
+									<p:inputText id="inUpDiscoDuro" placeholder="Disco Duro" styleClass="width-complete"
+										value="#{infraestructuraRegMB.ambienteUpdate.discoDuro}" autocomplete="off">
+										<p:keyFilter mask="num" />
+									</p:inputText>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpUnidad" value="Unidad de Medida HDD:" styleClass="width-complete"/>
+									<p:selectOneMenu id="inUpUnidad" value="#{infraestructuraRegMB.ambienteUpdate.unidadMedidaDD}" 
+										styleClass="width-complete" style="min-width: 100% !important">
+										<f:selectItem itemLabel="Mb" itemValue="Mb"/>
+										<f:selectItem itemLabel="Gb" itemValue="Gb"/>
+										<f:selectItem itemLabel="Tb" itemValue="Tb"/>
+									</p:selectOneMenu>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpSistemaOperatovo" value="Sistema Operativo:" styleClass="width-complete"/>
+									<p:inputText id="inUpSistemaOperativo" placeholder="Sistema Operativo" styleClass="width-complete"
+									value="#{infraestructuraRegMB.ambienteUpdate.sistemaOperativo}" autocomplete="off"/>
+								</div>						
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpBaseDatos" value="Base de Datos:" styleClass="width-complete"/>
+									<p:inputText id="inUpBaseDatos" placeholder="Base de Datos" styleClass="width-complete"
+									value="#{infraestructuraRegMB.ambienteUpdate.baseDatos}" autocomplete="off"/>
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpHostname" value="Hostname:" styleClass="width-complete"/>
+									<p:inputText id="inUpHostname" placeholder="Hostname" styleClass="width-complete #{infraestructuraRegMB.styleErrorHostUp}"
+										value="#{infraestructuraRegMB.ambienteUpdate.hostName}" autocomplete="off" maxlength="25">
+										<p:ajax event="change" listener="#{infraestructuraRegMB.VerificaHostUp}" 
+											update="ambienteUpdate" process="@this" />
+									</p:inputText>
+									<p:outputLabel id="lbMsgUpHost" value="#{infraestructuraRegMB.msgHostUp}" rendered="#{infraestructuraRegMB.msgHostUp != ''}" 
+										styleClass="width-complete color-red" />
+								</div>
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpIP" value="IP:" styleClass="width-complete"/>
+									<p:inputText id="inUpIP" placeholder="IP" styleClass="width-complete #{infraestructuraRegMB.styleErrorIpUp}" 
+										value="#{infraestructuraRegMB.ambienteUpdate.ip}" autocomplete="off" maxlength="30">
+										<p:ajax event="change" listener="#{infraestructuraRegMB.VerificaIpUp}" 
+											update="ambienteUpdate" process="@all" />
+									</p:inputText>								
+									<p:outputLabel id="lbUpMsgUpIp" value="#{infraestructuraRegMB.msgIPUp}" rendered="#{infraestructuraRegMB.msgIPUp != ''}" 
+										styleClass="width-complete color-red" />
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-4">
+									<p:outputLabel id="lbUpEntrega" value="Entrega de Equipo:" styleClass="width-complete"/>
+									
+									<p:calendar id="inUpFecEntrega" navigator="true" required="false" styleClass="input-form"
+										pattern="yyyy-mm-dd" locale="es" value="#{infraestructuraRegMB.ambienteUpdate.entregaEquipoDate}"
+										placeholder="Entrega de Equipo" disabledWeekends="true">
+										<p:ajax event="dateSelect" listener="#{infraestructuraRegMB.AsignaFechaEntregaUp}"/>
+										<p:ajax event="keyup" listener="#{infraestructuraRegMB.AsignaFechaEntregaUp}" />
+									</p:calendar>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-sm-12">
+									<p:outputLabel id="lbComentariosUpdate" value="Comentarios:" styleClass="width-complete"/>
+									<p:inputTextarea styleClass="input-form" maxlength="500" value="#{infraestructuraRegMB.ambienteUpdate.comentario}" />
+								</div>
+							</div>
+						</div>
+						<br/>
+						<div class="container text-center">
+							<div class="row">
+								<div class="col-2"></div>
+								<div class="col-4">
+									<p:commandButton id="btnCerrarIssueModal" 
+										icon="pi pi-check" 
+										oncomplete="PF('verAmbiente').show()" 
+										value="Guardar" ajax="false"
+					                	styleClass="ui-button-raised" 
+					                	actionListener="#{infraestructuraRegMB.ActualizaAmbiente}"
+					                	update="InfraPanel"
+					                	process="@all">
+					                </p:commandButton>			                
+								</div>
+								<div class="col-4">
+									<p:commandButton value="Cancelar" icon="pi pi-times"
+										styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+										onclick="PF('verAmbiente').hide()"/>
+								</div>
+							</div>
+						</div>
+					</h:panelGroup>				
+				</p:dialog>
+				
+				<p:dialog id="borrarAmbiente" widgetVar="verBorrarAmbiente" header="Eliminar Ambiente #{infraestructuraRegMB.ambienteDelete.hostName}"
+					minHeight="50" width="700" showEffect="fade" hideEffect="fade" modal="true">
+					
+					<div class="container text-center">
+						<div class="row">
+							<div class="col">
+								<p:outputLabel id="lbPregunta" value="¿Desea eliminar el ambiente ''#{infraestructuraRegMB.ambienteDelete.hostName}''?" style="font-size: 20px;"/>
+							
+								<p:outputLabel id="lbComentrario" value="El ambiente se eliminará permanentemente"/>
+							</div>
+						</div>
+					</div>
+					<div class="container text-center">
+						<div class="row">
+							<div class="col-2"></div>
+							<div class="col-4">
+								<p:commandButton id="btnEliminar" 
+									icon="pi pi-check" 
+									oncomplete="PF('verBorrarAmbiente').show()" 
+									value="Eliminar" ajax="false"
+				                	styleClass="ui-button-raised" 
+				                	actionListener="#{infraestructuraRegMB.eliminarAmbiente}"
+				                	update="InfraPanel"
+				                	process="@all">
+				                </p:commandButton>			                
+							</div>
+							<div class="col-4">
+								<p:commandButton value="Cancelar" icon="pi pi-times"
+									styleClass="ui-confirmdialog-no ui-button-raised ui-button-danger" 
+									onclick="PF('verBorrarAmbiente').hide()"/>
+							</div>
+						</div>
+					</div>
+					
+				</p:dialog>
+				
+			</h:panelGroup>			
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>

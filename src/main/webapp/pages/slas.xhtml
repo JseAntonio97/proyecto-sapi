@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<div class="container">
+		<p:outputLabel value="Porcentajes de avance"/>
+	</div>
+	
+	<div class="container">
+		<hr/>
+	</div>
+	
+	<div class="container">
+		<div class="row text-center">
+			<div class="col-sm-12">
+				<h:panelGrid id="pnlPorcentajes" columns="2" cellspacing="10" cellpadding="17" styleClass="width-80p text-center" style="margin-left: 8%">
+					
+					<p:outputLabel value="Portafolio Empresarial"/>
+					<p:inputNumber id="inPorcPE" value="#{funOperativeMB.porcentajes.porportempr}" styleClass="#{funOperativeMB.styleErrorPorcPE}" symbol="%" symbolPosition="s" emptyValue="always" maxValue="100" minValue="0"/>
+					
+					<p:outputLabel value="F60"/>
+					<p:inputNumber id="inPorcF60" value="#{funOperativeMB.porcentajes.porcF60}" styleClass="#{funOperativeMB.styleErrorPorcF60}" symbol="%" symbolPosition="s" emptyValue="always" maxValue="100" minValue="0"/>
+					
+					<p:outputLabel value="Infraestructura"/>
+					<p:inputNumber id="inPorcInfra" value="#{funOperativeMB.porcentajes.porcInfra}" styleClass="#{funOperativeMB.styleErrorPorcInfra}" symbol="%" symbolPosition="s" emptyValue="always" maxValue="100" minValue="0"/>
+					
+					<p:outputLabel value="Aplicativo"/>
+					<p:inputNumber id="inPorcApl" value="#{funOperativeMB.porcentajes.porcAplicativo}" styleClass="#{funOperativeMB.styleErrorPorcApl}" symbol="%" symbolPosition="s" emptyValue="always" maxValue="100" minValue="0"/>
+					
+					<p:outputLabel value="Pre ATP"/>
+					<p:inputNumber id="inPorcPreAtp" value="#{funOperativeMB.porcentajes.porcPreATP}" styleClass="#{funOperativeMB.styleErrorPorcPreATP}" symbol="%" symbolPosition="s" emptyValue="always" maxValue="100" minValue="0"/>
+					
+					<p:outputLabel value="ATP"/>
+					<p:inputNumber id="inPorcAtp" value="#{funOperativeMB.porcentajes.porcATP}" styleClass="#{funOperativeMB.styleErrorPorcATP}" symbol="%" symbolPosition="s" emptyValue="always" maxValue="100" minValue="0"/>
+					
+					<p:outputLabel value="RTO"/>
+					<p:inputNumber id="inPorcRTO" value="#{funOperativeMB.porcentajes.porcRTO}" styleClass="#{funOperativeMB.styleErrorPorcRTO}" symbol="%" symbolPosition="s" emptyValue="always" maxValue="100" minValue="0" />
+					
+				</h:panelGrid>
+			</div>
+		</div>
+	</div>
+	
+	<div class="container">
+		<div class="row text-center">
+			<div class="col-sm-12">
+				<p:commandButton 
+					id="btnGuardarProcentajes"
+					styleClass="ui-button-raised button-20"
+					value="Guardar"
+					actionListener="#{funOperativeMB.ActualizaPorcentajes}"
+					ajax="false"
+					update="templateForm:pnlCatalogos"
+					process="@all"/>
+			</div>
+		</div>
+	</div>
+
+</html>

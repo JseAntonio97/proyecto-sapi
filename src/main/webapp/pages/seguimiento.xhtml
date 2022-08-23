@@ -1,0 +1,107 @@
+<ui:composition xmlns	=	"http://www.w3.org/1999/xhtml"
+		xmlns:ui=	"http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h	=	"http://xmlns.jcp.org/jsf/html"
+		xmlns:f	=	"http://xmlns.jcp.org/jsf/core"
+    	xmlns:p	=	"http://primefaces.org/ui"
+		template = "../template/template.xhtml">
+	<ui:define name = "contenido">
+		
+		<h:panelGroup id="pnlMensajeWarning" rendered="#{seguimientoMB.msgWarning != ''}">
+			<div class="container padding-1">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="alert alert-warning alert-dismissible">
+					    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+					    	<strong> Resultado </strong> - <h:outputLabel id="lbWarning" value="#{seguimientoMB.msgWarning}" styleClass="col-form-label" style="font-size:12px;"/>
+					  	</div>
+					</div>								
+				</div>
+			</div>
+		</h:panelGroup>
+		
+		<div class="container">
+			<H3>Seguimiento de Proyectos</H3>
+		</div>
+		<div class="container">
+			<p:outputLabel value="Proyectos liberados para su seguimiento"/>
+		</div>
+			
+		<div class="container padding-1">
+			<div class="row">
+				<div class="col-sm-4">
+					<p:outputLabel id="lbNomProyecto" value="Nombre del Proyecto"/>
+					<p:inputText id="inNomProyecto" value="#{seguimientoMB.busNomProyecto}" placeholder="Nombre del Proyecto" styleClass="input-form" autocomplete="off"/>
+				</div>
+				<div class="col-sm-4">
+					<p:outputLabel id="lbIntegrador" value="Integrador"/>
+					<p:inputText id="inIntegrador" value="#{seguimientoMB.busIntegrador}" placeholder="Integrador" styleClass="input-form" autocomplete="off"/>
+				</div>
+				<div class="col-sm-4">
+					<p:outputLabel id="lbFolioEmp" value="Folio Portafolio Empresarial"/>
+					<p:inputText id="inFolioEmp" value="#{seguimientoMB.busPorEmpresarial}" placeholder="Folio" styleClass="input-form" autocomplete="off"/>
+				</div>
+			</div>
+		</div>
+		
+		<div style="text-align: center;" class="pad-bottom-1">
+			<p:commandButton id="btnBuscarProyecto" styleClass="ui-button-raised text-center width-200" 
+			actionListener="#{seguimientoMB.buscarProyectosByParametros}" 
+			value="Buscar" icon="pi pi-search"
+			ajax="false"
+			update="pnlMensajeWarning"
+			process="@all"/>
+		</div>
+		
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+				
+					<p:dataTable id="tblProyectos" value="#{seguimientoMB.listProyectosAsignados}" var="rsProyectos" paginator="true" rows="10" 
+							rowsPerPageTemplate="5,10,15" styleClass="font-13" reflow="true"
+							rowStyleClass="#{rsProyectos.marcaLeido == 0 ? 'back-no-leido' : null}">
+							<f:facet name="header">
+								<div class="justify-content-center text-center">
+						       		<b><h:outputText value="Seguimiento de Proyectos"/></b>
+								</div>
+						    </f:facet>				    
+						    <p:column headerText="Nombre" sortBy="#{rsProyectos.nombreProyecto}" style="text-align: center;" styleClass="width-110">
+								<p:commandButton value="#{rsProyectos.nombreProyecto}" 
+									styleClass="ui-button-flat shadow-sapi font-12 width-120 btn-text"  
+									title="Dar Seguimiento"
+									action="#{seguimientoMB.seguimientoProyecto}">
+									 <f:setPropertyActionListener value="#{rsProyectos}" target="#{seguimientoMB.proyectoSelected}"/>
+								</p:commandButton>
+							</p:column>
+							<p:column headerText="Solicitante" sortBy="#{rsProyectos.solicitante}" style="text-align: center;">
+								<h:outputText id="rsLbSolicitante" value="#{rsProyectos.solicitante}"/>
+							</p:column>
+							<p:column headerText="Integrador" sortBy="#{rsProyectos.integrador}" style="text-align: center;">
+								<h:outputText id="rsLbIntegrador" value="#{rsProyectos.integrador}"/>
+							</p:column>
+							<p:column headerText="Folio PE" sortBy="#{rsProyectos.portafolioEmp.folio}" style="text-align: center;">
+								<h:outputText id="rsLbFolioPE" value="#{(rsProyectos.portafolioEmp.folio == '') ? 'N/A' : rsProyectos.portafolioEmp.folio}"/>
+							</p:column>
+							<p:column headerText="Estrategia" sortBy="#{rsProyectos.estrategia.estrategia}" style="text-align: center;">
+								<h:outputText id="rsLbEstrategia" value="#{rsProyectos.estrategia.estrategia}"/>
+							</p:column>
+							<p:column headerText="Fase Actual" sortBy="#{rsProyectos.faseActual}" style="text-align: center;">
+								<h:outputText id="rsLbFase" value="#{(rsProyectos.faseActual == null) ? 'Portafolio Empresarial' : rsProyectos.faseActual}"/>
+							</p:column>
+							<p:column headerText="% de Avance" sortBy="#{rsProyectos.porcAvanceActual}" style="text-align: center;" styleClass="width-60">
+								<h:outputText id="rsAvance" value="#{rsProyectos.porcAvanceActual}%"/>
+							</p:column>
+							<p:column headerText="Gerencia" sortBy="#{rsProyectos.gerenciaDto.gerencia}" style="text-align: center;">
+								<h:outputText id="rsLbGerencia" value="#{rsProyectos.gerenciaDto.gerencia}"/>
+							</p:column>
+							<p:column headerText="Estatus" sortBy="#{rsProyectos.estatus}" style="text-align: center;">
+								<span class="customer-badge status-#{rsProyectos.estatus}">#{rsProyectos.estatus}</span>
+							</p:column>
+					</p:dataTable>
+				
+				</div>
+			</div>
+		</div>
+					
+		
+	</ui:define>
+</ui:composition>

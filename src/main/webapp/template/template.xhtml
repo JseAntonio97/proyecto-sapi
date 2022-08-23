@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html 	xmlns	=	"http://www.w3.org/1999/xhtml"
+		xmlns:ui=	"http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h	=	"http://xmlns.jcp.org/jsf/html"
+		xmlns:f	=	"http://xmlns.jcp.org/jsf/core"
+    	xmlns:p	=	"http://primefaces.org/ui">
+
+	<h:head>
+		<title>SAPI</title>
+		<meta http-equiv="Content-Type" content="text/html"/>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<link rel="shortcut icon" type="image/png" href="#{request.contextPath}/resources/images/ico_telcel.png"/>
+		
+		<h:outputStylesheet library="css" name="header.css"/>
+		<h:outputStylesheet library="css" name="bootstrap.min.css"/>
+		<h:outputStylesheet library="css" name="sapi.css"/>
+		
+		<h:outputScript library="primefaces" name="jquery/jquery.js" />
+		<h:outputScript library = "js" name = "bootstrap.min.js" /> 
+		<h:outputScript library = "js" name = "login.js" /> 
+		<h:outputScript library = "js" name = "date-format-prime.js" />
+		<h:outputScript library = "js" name = "sapi.js" />
+		
+		<f:event listener="#{loginMB.ValidaSesion}" type="preRenderView"/>
+		<p:poll id="tempSession" interval="1810" listener="#{loginMB.ValidaSesion}"/>	
+	</h:head>
+	<h:body>
+		<h:form id="templateForm" enctype="multipart/form-data">			
+			<header id="headerId" class="header shadow-sapi">
+				<ui:include src="/template/header.xhtml"></ui:include>
+			</header>
+			
+			<section id="section">
+				<h:panelGroup id="navPanel">
+					<nav class="">					
+						<ui:include src="/template/navbar.xhtml"></ui:include>
+					</nav>
+				</h:panelGroup>
+				
+				<article id="article">
+					<ui:insert name = "contenido">		
+					</ui:insert>
+				</article>		
+			</section>
+		</h:form>
+	</h:body>
+</html>

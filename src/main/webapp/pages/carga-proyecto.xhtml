@@ -1,0 +1,201 @@
+<ui:composition 
+		xmlns	=	"http://www.w3.org/1999/xhtml"
+		xmlns:ui=	"http://xmlns.jcp.org/jsf/facelets"
+		xmlns:h	=	"http://xmlns.jcp.org/jsf/html"
+		xmlns:f	=	"http://xmlns.jcp.org/jsf/core"
+    	xmlns:p	=	"http://primefaces.org/ui"
+		template = "../template/template.xhtml">
+	<ui:define name = "contenido">
+	
+	<h:panelGroup id="pnlGeneral">
+	
+		<p:defaultCommand target="btnGuardar"></p:defaultCommand>
+	
+	    <h:panelGroup id="pnlMsgSucc" rendered="#{registroMB.msgSuccess != ''}">
+			<div class="container pad-top-1">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="alert alert-success alert-dismissible">
+					    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+					    	<strong style="font-size: 15px;"> &#10003; </strong> - <h:outputLabel id="lbSatisfacorio" value="#{registroMB.msgSuccess}"/>
+					  	</div>
+					</div>								
+				</div>
+			</div>
+		</h:panelGroup>
+		
+		<h:panelGroup id="pnlMsgErr" rendered="#{registroMB.msgError != ''}">
+	   		<div class="container pad-top-1" >
+				<div class="row">
+					<div class="col-12">
+					  	<div class="alert alert-danger alert-dismissible">
+					    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+						    <strong>Atención</strong> - <p:outputLabel value = "#{registroMB.msgError}"/>
+						</div>
+					</div>								
+				</div>
+			</div>
+		</h:panelGroup>
+			
+		<h:panelGroup id="pnlMsgWarn" rendered="#{registroMB.msgWarnning != ''}">
+	   		<div class="container pad-top-1" >
+				<div class="row">
+					<div class="col-12">
+					  	<div class="alert alert-warning alert-dismissible">
+					    	<a href="#" class="close" data-dismiss="alert" aria-label="close">&#xD7;</a>
+						    <strong>Precaución</strong> - <p:outputLabel value = "#{registroMB.msgWarnning}"/>
+						    <h:dataTable value="#{registroMB.listFoliosRegistrados}" var="listar">				    		
+			    		 		<h:column>
+							    	<strong>&#8226;</strong> Folio: #{listar.folio} , Proyecto: #{listar.nombreProyecto} , Estatus: #{listar.estatusProyecto} 
+							    </h:column>
+					    	</h:dataTable>
+						</div>
+					</div>								
+				</div>
+			</div>
+		</h:panelGroup>
+	
+		<div class="container">
+			<H3>Registro de proyecto</H3>
+		</div>
+		
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<hr/>
+				</div>
+			</div>
+		</div>
+		
+		<h:panelGroup id="generalPanel">
+			<h:panelGroup>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4">
+							<p:outputLabel id="lbIntegrador" value="Integrador:" styleClass="width-complete"/>
+							<p:inputText id="inIntegrador" placeholder="Integrador" styleClass="width-complete" 
+							value="#{registroMB.proyecto.integrador}" autocomplete="off"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbNomProyecto" value="Nombre del Proyecto:" styleClass="width-complete"/>
+							<p:inputText id="inNomProyecto" placeholder="Nombre del Proyecto" styleClass="width-complete #{registroMB.styleErrornombreProyecto}" 
+							value="#{registroMB.proyecto.nombreProyecto}" autocomplete="off"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbSolicitante" value="Solicitante:" styleClass="width-complete"/>
+							<p:inputText id="inSolicitante" placeholder="Solicitante" styleClass="width-complete #{registroMB.styleErrorsolicitante}" 
+							value="#{registroMB.proyecto.solicitante}" autocomplete="off"/>
+						</div>
+					</div>
+				</div>
+
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4">
+							<p:outputLabel id="lbDireccionCat" value="Dirección:" styleClass="width-complete"/>
+							<p:selectOneMenu id="inSlcDireccion" value="#{registroMB.idDireccion}" styleClass="width-complete #{registroMB.styleErrordireccion}" >
+								<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+								<f:selectItems value="#{registroMB.listDireccion}" var="direccion" itemLabel="#{direccion.direccion}" itemValue="#{direccion.idDireccion}" />
+								<p:ajax listener="#{registroMB.cargaGerencias}" update="inSlcGerencia"/>
+							</p:selectOneMenu>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbGerenciaCat" value="Gerencia:" styleClass="width-complete"/>
+							<p:selectOneMenu id="inSlcGerencia" value="#{registroMB.idGerencia}" styleClass="width-complete #{registroMB.styleErrorgerencia}"
+								disabled="#{registroMB.idDireccion == 0}"  style="min-width: 300px !important; max-width: 350px !important;">
+								<f:selectItem itemLabel="- Seleccione -" itemValue="0"/>
+								<f:selectItems value="#{registroMB.listGerencia}" var="ger" itemLabel="#{ger.gerencia}" itemValue="#{ger.idGerencia}" />
+							</p:selectOneMenu>
+							
+						</div>
+						<div class="col-sm-4">
+							
+						</div>
+					</div>
+				</div>
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-4">
+							<p:outputLabel id="lbDescripcion" value="Descripción:" styleClass="width-complete"/>
+							<p:inputTextarea id="inDescripcion" placeholder="Descripción" styleClass="width-complete" autocomplete="off"
+							value="#{registroMB.proyecto.descripcion}"/>
+						</div>
+						<div class="col-sm-4">
+							<p:outputLabel id="lbComentariosGrls" value="Comentarios Generales:" styleClass="width-complete"/>
+							<p:inputTextarea id="inComentariosGrls" placeholder="Comentarios Generales" styleClass="width-complete" autocomplete="off"
+							value="#{registroMB.proyecto.comentariosGrls}"/>
+						</div>
+						<div class="col-sm-4"></div>
+					</div>
+				</div>			
+			</h:panelGroup>			
+		</h:panelGroup>
+		
+			<h:panelGroup id="portEmpr">	
+				<div class="container padding-res-1-5">
+					<div class="row">
+						<div class="col-sm">
+							<p:selectBooleanCheckbox id="checkPortEmpr" value="#{registroMB.checkActivatePE}" itemLabel="Agregar Portafolio Empresarial">
+								<p:ajax event="change" update="portEmpr"/>
+							</p:selectBooleanCheckbox>
+						</div>
+					</div>
+				</div>
+				
+				<h:panelGroup id="panelpe" styleClass="padding-1" rendered="#{registroMB.checkActivatePE}">
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-4">
+								<p:outputLabel id="lbAplica" value="Aplica*:" styleClass="width-complete"/>
+								<p:selectOneMenu id="slcResponsable" value="#{registroMB.proyecto.portafolioEmp.aplica}" 
+									styleClass="width-complete " style="min-width: 100% !important">
+									<f:selectItem itemLabel="Si" itemValue="Si"/>
+									<f:selectItem itemLabel="No" itemValue="No"/>
+								</p:selectOneMenu>
+							</div>
+							<div class="col-sm-4">
+								<p:outputLabel id="lbFolio" value="Folio*:" styleClass="width-complete"/>
+								<p:inputText id="inFolio" placeholder="Folio" styleClass="width-complete" autocomplete="off"
+									value="#{registroMB.proyecto.portafolioEmp.folio}">
+									<p:ajax event="change" listener="#{registroMB.verificaFolioExistente}" 
+										update="pnlGeneral" process="@all" />
+								</p:inputText>
+								
+								<p:outputLabel id="lbMsgFolio" value="#{registroMB.msgWarnningFolio}" rendered="#{registroMB.msgWarnningFolio != ''}" 
+									styleClass="width-complete color-red" />
+							</div>
+							<div class="col-sm-4">
+								<p:outputLabel id="lbFecEntrada" value="Entrada*:" styleClass="width-complete"/>
+								<p:calendar id="inFecEntrada" navigator="true" placeholder="Entrada" required="false" autocomplete="off"
+									pattern="yyyy-mm-dd" locale="es" value="#{registroMB.fecEntrada}" />
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<p:outputLabel id="lbFecSalida" value="Salida*:" styleClass="width-complete"/>
+								<p:calendar id="inFecSalida" navigator="true" placeholder="Salida" required="false" autocomplete="off"
+									pattern="yyyy-mm-dd" locale="es" value="#{registroMB.fecSalida}" />
+							</div>
+							<div class="col-sm-4"></div>
+							<div class="col-sm-4"></div>
+						</div>
+					</div>
+				</h:panelGroup>
+			</h:panelGroup>	
+		
+		<div class="container padding-1 text-center">
+			<div class="row">
+				<div class="col-sm">
+					<p:commandButton 
+						id="btnGuardar" 
+						value="Guardar" 
+						ajax="false"
+						styleClass="ui-button-raised button-190-px" 
+						actionListener="#{registroMB.guardar}" 
+						update="@all"/>
+				</div>
+			</div>
+		</div>
+		</h:panelGroup>
+	</ui:define>	
+</ui:composition>
